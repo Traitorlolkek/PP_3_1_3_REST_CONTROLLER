@@ -2,41 +2,48 @@ package ru.kata.spring.boot_security.demo.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "name")
+    @NotNull
     private String name;
     @Column(name = "last_name")
+    @NotNull
     private String last_name;
     @Column(name = "email")
+    @NotNull
     private String email;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> userRole = new HashSet<>();
 
     public User() {
     }
 
-    public User(long id, String name, String last_name, String email, List<Role> role) {
+    public User(long id, String name, String last_name, String email) {
         this.id = id;
         this.name = name;
         this.last_name = last_name;
         this.email = email;
-        this.role = role;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -62,26 +69,22 @@ public class User {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(last_name, user.last_name) && Objects.equals(email, user.email);
+    public void setUserRole(Set<Role> userRole) {
+        this.userRole = userRole;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name, last_name, email);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 }
