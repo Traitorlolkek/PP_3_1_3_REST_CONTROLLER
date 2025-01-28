@@ -23,12 +23,12 @@ public class User implements UserDetails {
     @Column(name = "email")
     @NotNull
     private String email;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> userRole = new HashSet<>();
+//
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "users_role",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    private Set<Role> userRole = new HashSet<>();
 
     public User() {
     }
@@ -69,9 +69,9 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public void setUserRole(Set<Role> userRole) {
-        this.userRole = userRole;
-    }
+//    public void setUserRole(Set<Role> userRole) {
+//        this.userRole = userRole;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

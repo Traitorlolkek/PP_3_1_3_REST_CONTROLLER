@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImp implements UserService, UserDetailsService {
+public class UserServiceImp implements UserService /*UserDetailsService*/ {
     private final UserDao userDao;
 
     public UserServiceImp(UserDao userDao) {
@@ -59,8 +59,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
         userDao.deleteById(id);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDao.findByUsername(username);
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return userDao.findByUsername(username);
+//    }
 }
