@@ -5,6 +5,7 @@ package ru.kata.spring.boot_security.demo.configs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,7 +43,9 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
                 .build();
 
         UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("root")).roles("ADMIN").build();
+                .password(passwordEncoder().encode("root"))
+                .roles("ADMIN")
+                .build();
         return new InMemoryUserDetailsManager(user,admin);
     }
 
@@ -65,6 +68,20 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
 //                .logout(LogoutConfigurer::permitAll);
 //        return http.build();
 //    }
+
+
+    @Bean
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/admin/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().hasRole("ADMIN")
+                )
+                .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
