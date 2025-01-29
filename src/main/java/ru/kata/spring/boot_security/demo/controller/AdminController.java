@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
-
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,15 +10,15 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 @Controller
-@RequestMapping("/admin")
-public class UserControllerImp {
+//@RequestMapping("/admin")
+public class AdminController {
     private final UserService userService;
 
-    public UserControllerImp(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping("/users")
     public String getAllUser(Model model) {
         model.addAttribute("user", userService.readAllUser());
         return "users";

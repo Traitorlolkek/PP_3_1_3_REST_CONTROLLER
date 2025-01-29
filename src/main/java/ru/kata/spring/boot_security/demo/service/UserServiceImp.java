@@ -1,9 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImp implements UserService /*UserDetailsService*/ {
+public class UserServiceImp implements UserService {
     private final UserDao userDao;
 
     public UserServiceImp(UserDao userDao) {
@@ -39,14 +37,15 @@ public class UserServiceImp implements UserService /*UserDetailsService*/ {
     }
 
     @Override
-    public User updateUser(Long id, User updateUser) {
+    @Transactional
+    public void updateUser(Long id, User updateUser) {
         Optional<User> existingUser = userDao.findById(id);
         if(existingUser.isPresent()){
             User user = existingUser.get();
-            user.setName(updateUser.getName());
+            user.setName(updateUser.getUsername());
             user.setLast_name(updateUser.getLast_name());
             user.setEmail(updateUser.getEmail());
-            return userDao.save(user);
+            userDao.save(user);
         } else {
             throw new IllegalArgumentException("User with id " + id + " not found");
         }
@@ -59,8 +58,4 @@ public class UserServiceImp implements UserService /*UserDetailsService*/ {
         userDao.deleteById(id);
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return userDao.findByUsername(username);
-//    }
 }

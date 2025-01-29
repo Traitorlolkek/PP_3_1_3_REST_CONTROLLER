@@ -2,11 +2,14 @@ package ru.kata.spring.boot_security.demo.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -14,30 +17,43 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "name")
-    @NotNull
-    private String name;
+
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "last_name")
-    @NotNull
     private String last_name;
+
     @Column(name = "email")
-    @NotNull
     private String email;
-//
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "users_role",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Set<Role> userRole = new HashSet<>();
+
+    @Column
+    @Transient
+    private String password;
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> userRole = new HashSet<>();
 
     public User() {
     }
 
-    public User(long id, String name, String last_name, String email) {
+    public User(String name, String password, Set<Role> userRole) {
+        this.username = name;
+        this.password = password;
+        this.userRole = userRole;
+
+    }
+
+    public User(long id, String name, String last_name, String email, String password) {
         this.id = id;
-        this.name = name;
+        this.username = name;
         this.last_name = last_name;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -46,11 +62,11 @@ public class User implements UserDetails {
 
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
     public String getLast_name() {
@@ -69,22 +85,28 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-//    public void setUserRole(Set<Role> userRole) {
-//        this.userRole = userRole;
-//    }
+    public Set<Role> getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Set<Role> userRole) {
+        this.userRole = userRole;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.getUserRole().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 }
