@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Registration</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             margin: 0;
         }
 
-        .login-container {
+        .registration-container {
             background-color: white;
             padding: 30px;
             border-radius: 8px;
@@ -38,7 +38,8 @@
         }
 
         input[type="text"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="email"] {
             width: calc(100% - 20px);
             padding: 10px;
             border: 1px solid #ccc;
@@ -46,7 +47,18 @@
             margin-bottom: 10px;
             box-sizing: border-box;
         }
-        button{
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto;
+        }
+        button {
             width: 100%;
             padding: 10px;
             background-color: #007bff;
@@ -64,37 +76,44 @@
             color: red;
             margin-top: 10px;
         }
-
-        .register-link {
-            margin-top: 15px;
-            display: block;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .register-link:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
-<div class="login-container">
-    <h1>Login</h1>
-    <form th:action="@{/login}" method="post">
+<div class="registration-container">
+    <h1>Registration</h1>
+    <form th:action="@{/registration}" method="post">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
         </div>
         <div class="form-group">
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
+        <div class="form-group">
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER">
+                <label for="roleUser">User</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
+                <label for="roleAdmin">Admin</label>
+            </div>
+        </div>
+        <button type="submit">Register</button>
         <div th:if="${param.error}" class="error-message">
-            Invalid username or password
+            Registration failed. Try again
         </div>
     </form>
-    <a th:href="@{/registration}" class="register-link">Для регистрации нажмите сюда</a>
 </div>
 </body>
 </html>

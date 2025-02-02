@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,28 +28,15 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() {
-//        UserDetails user = User.withUsername("root")
-//                .password(passwordEncoder().encode("root"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.withUsername("admin")
-//                .password(passwordEncoder().encode("root"))
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login", "/register").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/login", "/registration").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -59,7 +45,14 @@ public class WebSecurityConfig {
                         .successHandler(successUserHandler)
                         .permitAll()
                 ).userDetailsService(userDetailService)
-                .logout(LogoutConfigurer::permitAll);
+                .logout((logout) -> logout
+                        .logoutUrl("/logout") // URL для выхода из системы
+                        .logoutSuccessUrl("/login?logout=true") // URL перенаправления после успешного выхода
+                        .invalidateHttpSession(true) // Инвалидация сессии
+                        .deleteCookies("JSESSIONID") // Удаление cookies
+                        .clearAuthentication(true)
+                        .permitAll()
+                );
         return http.build();
     }
 }

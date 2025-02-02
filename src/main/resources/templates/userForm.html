@@ -4,25 +4,78 @@
     <meta charset="UTF-8">
     <title>Add User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+
+        .buttonLogout {
+            background-color: #f44336; /* Red color for logout */
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .buttonLogout:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
     <h2>Add User</h2>
-    <form th:action="@{/add}" method="post" th:object="${user}">
+    <form th:action="@{/admin/add}" method="post" th:object="${user}">
+        <!-- Поле для ввода имени -->
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" th:field="*{name}" required>
         </div>
+
+        <!-- Поле для ввода фамилии -->
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" class="form-control" id="last_name" th:field="*{last_name}" required>
         </div>
+
+        <!-- Поле для ввода email -->
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" th:field="*{email}" required>
         </div>
+
+        <!-- Поле для ввода пароля -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" required>
+        </div>
+
+        <!-- Чекбоксы для выбора ролей -->
+        <div class="form-group">
+            <label>Roles</label>
+            <div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="role_admin" name="roles" value="ROLE_ADMIN">
+                    <label class="form-check-label" for="role_admin">Admin</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="role_user" name="roles" value="ROLE_USER">
+                    <label class="form-check-label" for="role_user">User</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка отправки формы -->
         <button type="submit" class="btn btn-primary">Accept</button>
     </form>
+
+    <form action="#" th:action="@{/logout}" method="post">
+        <input type="submit" class="buttonLogout" value="Logout"/>
+    </form>
+
+    <!-- Ссылка для возврата к списку пользователей -->
     <a href="/users" class="btn btn-secondary mt-3">Back to Users List</a>
 </div>
 </body>

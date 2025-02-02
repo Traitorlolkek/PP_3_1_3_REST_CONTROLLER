@@ -28,11 +28,10 @@ public class User implements UserDetails {
     private String email;
 
     @Column
-    @Transient
     private String password;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -48,21 +47,23 @@ public class User implements UserDetails {
 
     }
 
-    public User(long id, String name, String last_name, String email, String password) {
+    public User(long id, String name, String last_name, String email) {
         this.id = id;
         this.username = name;
         this.last_name = last_name;
         this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
         return id;
     }
 
-
     public String getName() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setName(String name) {
@@ -93,6 +94,11 @@ public class User implements UserDetails {
         this.userRole = userRole;
     }
 
+
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
