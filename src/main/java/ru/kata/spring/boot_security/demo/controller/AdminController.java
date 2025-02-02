@@ -45,7 +45,7 @@ public class AdminController {
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute("user") @Valid User user) {
         userService.updateUser(user.getId(),user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/delete")

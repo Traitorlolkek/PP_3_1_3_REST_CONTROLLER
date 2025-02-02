@@ -29,7 +29,7 @@
 <body>
 <div class="container mt-5">
   <h2>Edit User</h2>
-  <form th:action="@{/edit}" method="post" th:object="${user}">
+  <form th:action="@{/admin/edit}" method="post" th:object="${user}">
     <input type="hidden" th:field="*{id}" />
 
     <div class="form-group">
