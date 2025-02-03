@@ -23,6 +23,11 @@ public class UserServiceImp implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
+    public Optional<User> findByUsername(String username){
+        return userDao.findByUsername(username);
+    }
+
     @Override
     @Transactional
     public void createUser(User user) {
@@ -44,6 +49,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
+    public void deleteUserById(Long id) {
+        userDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional
     public void updateUser(Long id, User updateUser) {
         Optional<User> existingUser = userDao.findById(id);
         if(existingUser.isPresent()){
@@ -51,6 +62,7 @@ public class UserServiceImp implements UserService {
             user.setName(updateUser.getUsername());
             user.setLast_name(updateUser.getLast_name());
             user.setEmail(updateUser.getEmail());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userDao.save(user);
         } else {
             throw new IllegalArgumentException("User with id " + id + " not found");
@@ -58,10 +70,6 @@ public class UserServiceImp implements UserService {
 
     }
 
-    @Override
-    @Transactional
-    public void deleteUserById(Long id) {
-        userDao.deleteById(id);
-    }
+
 
 }
