@@ -7,7 +7,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-
     private final RoleDao roleDao;
 
     public DataInitializer(RoleDao roleDao) {

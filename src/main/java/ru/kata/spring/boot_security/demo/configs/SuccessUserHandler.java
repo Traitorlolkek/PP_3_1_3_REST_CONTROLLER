@@ -3,13 +3,12 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -20,7 +19,7 @@ import java.util.Set;
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
     private final UserService userService;
 
-    public SuccessUserHandler(UserService userService) {
+    public SuccessUserHandler(@Lazy UserService userService) {
         this.userService = userService;
     }
 
