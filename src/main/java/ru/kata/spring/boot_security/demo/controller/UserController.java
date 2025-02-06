@@ -19,8 +19,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/find")
-    public String findUserById(@RequestParam(value = "id", required = false) long id, Model model) {
+    @GetMapping("/find/{id}")
+    public String findUserById(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userService.readUserById(id));
         return "user";
     }

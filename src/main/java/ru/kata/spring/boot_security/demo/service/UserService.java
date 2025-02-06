@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface UserService {
 
-    public Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     void createUser(User user);
 
@@ -17,7 +17,7 @@ public interface UserService {
 
     User readUserById(Long id);
 
-    void updateUser(Long id, User updateUser);
+    void updateUser(User updateUser);
 
     void deleteUserById(Long id);
 }

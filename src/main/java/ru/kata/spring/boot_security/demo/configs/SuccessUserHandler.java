@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -23,15 +24,15 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         this.userService = userService;
     }
 
-    // Spring Security использует объект Authentication, пользователя авторизованной сессии.
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername()).orElse(null);
+        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
         if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/user");
+            httpServletResponse.sendRedirect("/user/find/" + user.getId());
         } else if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin/users");
         }

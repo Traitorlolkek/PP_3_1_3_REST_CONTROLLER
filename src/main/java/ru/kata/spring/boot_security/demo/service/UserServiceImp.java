@@ -1,11 +1,9 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -24,7 +22,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Transactional
-    public Optional<User> findByUsername(String username){
+    public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
 
@@ -44,7 +42,7 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User readUserById(Long id) {
-        return userDao.findById(id).orElse(null);
+        return userDao.findById(id).orElseThrow();
     }
 
     @Override
@@ -55,21 +53,10 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, User updateUser) {
-        Optional<User> existingUser = userDao.findById(id);
-        if(existingUser.isPresent()){
-            User user = existingUser.get();
-            user.setName(updateUser.getUsername());
-            user.setLast_name(updateUser.getLast_name());
-            user.setEmail(updateUser.getEmail());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userDao.save(user);
-        } else {
-            throw new IllegalArgumentException("User with id " + id + " not found");
-        }
-
+    public void updateUser(User updateUser) {
+        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+        userDao.save(updateUser);
     }
-
 
 
 }

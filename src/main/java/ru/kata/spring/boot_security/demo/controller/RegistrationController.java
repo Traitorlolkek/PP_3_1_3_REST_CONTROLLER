@@ -19,14 +19,13 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    // Обработка GET-запроса для отображения страницы регистрации
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "/registration";
     }
 
-    // Обработка POST-запроса для регистрации пользователя
+
     @PostMapping("/registration")
     public String registerUser(@RequestParam String username,
                                @RequestParam String lastName,
@@ -39,11 +38,8 @@ public class RegistrationController {
         user.setLast_name(lastName);
         user.setEmail(email);
         user.setPassword(password);
-
-        // Сохраняем пользователя с ролями
         registrationService.saveUser(user, roles);
 
-        // Перенаправляем на страницу входа
         return "redirect:/login";
     }
 }
