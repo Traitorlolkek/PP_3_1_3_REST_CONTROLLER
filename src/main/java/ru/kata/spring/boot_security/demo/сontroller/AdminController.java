@@ -41,8 +41,16 @@ public class AdminController {
     }
 
     @PostMapping("editUser")
-    public String editUser(User user) {
-        userService.updateUser(user);
+    public String editUser(@RequestParam Long id,
+                           @RequestParam String username,
+                           @RequestParam String password,
+                           @RequestParam String email,
+                           @RequestParam Set<String> roles) {
+        User user = userService.findUserById(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        userService.updateUser(user, roles);
         return "redirect:/admin/allUsers";
     }
 

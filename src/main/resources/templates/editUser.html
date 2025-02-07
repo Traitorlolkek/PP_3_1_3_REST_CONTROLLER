@@ -9,31 +9,30 @@
 <div class="container mt-5">
   <h2>Edit User</h2>
   <form th:action="@{/admin/editUser}" method="post" th:object="${user}">
-    <input type="hidden" th:field="*{id}" />
-
+    <input type="hidden" th:field="*{id}"/>
     <div class="form-group">
-      <label for="username">New name</label>
-      <input type="text" class="form-control" id="username" th:field="*{username}" required>
+      <label for="firstName">Name</label>
+      <input type="text" class="form-control" id="firstName" th:field="*{username}" required>
     </div>
 
     <div class="form-group">
-      <label for="email">New Email</label>
+      <label for="password">Password</label>
+      <input type="text" class="form-control" id="password" th:field="*{password}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
       <input type="email" class="form-control" id="email" th:field="*{email}" required>
     </div>
 
-    <div class="form-group">
-      <label for="password">New password (leave blank to keep the same)</label>
-      <input type="password" class="form-control" id="password" name="password">
+    <div>
+      <input type="checkbox" name="roles" value="ROLE_USER" id="roleUser"/>
+      <label for="roleUser">User</label>
+      <input type="checkbox" name="roles" value="ROLE_ADMIN" id="roleAdmin"/>
+      <label for="roleAdmin">Admin</label>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
-  </form>
-
-  <a href="/admin/allUsers" class="btn btn-secondary mt-3">Back to Users List</a>
-</div>
-<div class="logout-container">
-  <form th:action="@{/logout}" method="post">
-    <button type="submit">Logout</button>
   </form>
 </div>
 </body>
