@@ -1,38 +1,27 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.kata.spring.boot_security.demo.init;
 
-import org.springframework.boot.CommandLineRunner;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RegistrationService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
-import java.util.List;
 import java.util.Set;
 
 @Component
-public class DataInitializer implements CommandLineRunner {
-    private final RoleDao roleDao;
-    private final UserService userService;
+public class UserInit {
     private final RegistrationService registrationService;
+    private final UserService userService;
 
-    public DataInitializer(RoleDao roleDao, UserService userService, RegistrationService registrationService) {
-        this.roleDao = roleDao;
-        this.userService = userService;
+    public UserInit(RegistrationService registrationService, UserService userService) {
         this.registrationService = registrationService;
+        this.userService = userService;
     }
 
-    @Override
-    public void run(String[] args) throws Exception {
-        if (roleDao.findByName("ROLE_USER").isEmpty()) {
-            roleDao.save(new Role("ROLE_USER"));
-        }
-        if (roleDao.findByName("ROLE_ADMIN").isEmpty()) {
-            roleDao.save(new Role("ROLE_ADMIN"));
-        }
+    @PostConstruct
+    public void userRegistration(){
+
         if (userService.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setName("admin");
@@ -50,5 +39,14 @@ public class DataInitializer implements CommandLineRunner {
             user.setPassword("root");
             registrationService.saveUser(user, Set.of("ROLE_USER"));
         }
+    }
+
+    @PreDestroy
+    public void deleteTestUser(){
+        User admin = userService.findByUsername("admin").orElseThrow();
+        userService.deleteUserById(admin.getId());
+
+        User user = userService.findByUsername("user").orElseThrow();
+        userService.deleteUserById(user.getId());
     }
 }
