@@ -32,14 +32,7 @@ public class RegistrationController {
                                @RequestParam String email,
                                @RequestParam String password,
                                @RequestParam Set<String> roles) {
-
-        User user = new User();
-        user.setUsername(username);
-        user.setLast_name(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        registrationService.saveUser(user, roles);
-
+        registrationService.saveUser(username,lastName,email,password, roles);
         return "redirect:/login";
     }
 }

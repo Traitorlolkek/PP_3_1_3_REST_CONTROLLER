@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +25,8 @@ public class UserDetailService implements UserDetailsService {
         if (user.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
-        return new User(user.get().getUsername(), user.get().getPassword(), user.get().getUserRole());
+        User userRole = user.get();
+        userRole.getUserRole().size();
+        return user.get();
     }
 }

@@ -35,21 +35,11 @@ public class UserInit {
         }
 
         if (userService.findByUsername("admin").isEmpty()) {
-            User admin = new User();
-            admin.setName("admin");
-            admin.setLast_name("admin");
-            admin.setEmail("admin@admin.com");
-            admin.setPassword("root");
-            registrationService.saveUser(admin, Set.of("ROLE_ADMIN"));
+            registrationService.saveUser("admin", "admin","admin@admin.com","root", Set.of("ROLE_ADMIN"));
         }
 
         if (userService.findByUsername("user").isEmpty()) {
-            User user = new User();
-            user.setUsername("user");
-            user.setLast_name("user");
-            user.setEmail("user@user.com");
-            user.setPassword("root");
-            registrationService.saveUser(user, Set.of("ROLE_USER"));
+            registrationService.saveUser("user", "user","user@user.com","root", Set.of("ROLE_USER"));
         }
     }
 

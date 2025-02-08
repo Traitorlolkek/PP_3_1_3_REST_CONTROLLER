@@ -22,8 +22,13 @@ public class RegistrationService {
         this.roleDao = roleDao;
     }
 
-    public void saveUser(User user, Set<String> roleNames) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    public void saveUser(String userName, String lastName, String email,String password, Set<String> roleNames) {
+        User user = new User();
+        user.setName(userName);
+        user.setLast_name(lastName);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
 
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
@@ -33,7 +38,6 @@ public class RegistrationService {
         }
         user.setUserRole(roles);
 
-        // Сохраняем пользователя
         userDao.save(user);
     }
 }
