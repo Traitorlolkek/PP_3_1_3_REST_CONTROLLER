@@ -11,7 +11,7 @@ public interface UserService {
 
     Optional<User> findByUsername(String username);
 
-    void createUser(User user);
+    void createUser(String userName, String lastName, String email,String password, Set<String> roleNames);
 
     List<User> readAllUser();
 

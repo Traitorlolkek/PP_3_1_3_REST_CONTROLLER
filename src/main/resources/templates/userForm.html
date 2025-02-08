@@ -5,65 +5,98 @@
     <title>Add User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-        .buttonLogout {
-            background-color: #f44336; /* Red color for logout */
-            border: none;
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
             color: white;
-            padding: 10px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
 
-        .buttonLogout:hover {
-            background-color: #d32f2f; /* Darker red on hover */
+        button:hover {
+            background-color: #0056b3;
         }
+
     </style>
 </head>
 <body>
 <div class="container mt-5">
     <h2>Add User</h2>
-    <form th:action="@{/admin/add}" method="post" th:object="${user}">
-
+    <form th:action="@{/admin/add}" method="post">
         <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
         </div>
-
-
         <div class="form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" class="form-control" id="last_name" th:field="*{last_name}" required>
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName" required>
         </div>
-
-
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
         </div>
-
-
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
         </div>
-
-
         <div class="form-group">
-            <label>Roles</label>
-            <div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="role_admin" name="roles" value="ROLE_ADMIN">
-                    <label class="form-check-label" for="role_admin">Admin</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="role_user" name="roles" value="ROLE_USER">
-                    <label class="form-check-label" for="role_user">User</label>
-                </div>
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER">
+                <label for="roleUser">User</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
+                <label for="roleAdmin">Admin</label>
             </div>
         </div>
 
@@ -76,7 +109,7 @@
     </form>
 
 
-    <a href="/users" class="btn btn-secondary mt-3">Back to Users List</a>
+    <a href="/admin/users" class="btn btn-secondary mt-3">Back to Users List</a>
 </div>
 </body>
 </html>

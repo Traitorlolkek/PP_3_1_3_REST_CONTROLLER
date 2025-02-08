@@ -6,16 +6,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RegistrationService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.util.Set;
 
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
+    private final RegistrationService registrationService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RegistrationService registrationService) {
         this.userService = userService;
+        this.registrationService = registrationService;
     }
 
     @GetMapping("/users")
@@ -31,8 +36,12 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String addUser(@ModelAttribute("user") @Valid User user) {
-        userService.createUser(user);
+    public String addUser(@RequestParam String username,
+                          @RequestParam String lastName,
+                          @RequestParam String email,
+                          @RequestParam String password,
+                          @RequestParam Set<String> roles) {
+        registrationService.saveUser(username,lastName,email,password, roles);
         return "redirect:/admin/users";
     }
 
