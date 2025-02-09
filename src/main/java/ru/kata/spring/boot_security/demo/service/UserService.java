@@ -17,7 +17,7 @@ public interface UserService {
 
     User readUserById(Long id);
 
-    void updateUser(User updateUser);
+    void updateUser(User updateUser, Set<String> roleNames);
 
     void deleteUserById(Long id);
 }

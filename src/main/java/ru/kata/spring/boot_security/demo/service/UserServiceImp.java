@@ -18,11 +18,13 @@ import java.util.Set;
 @Service
 public class UserServiceImp implements UserService {
     private final UserDao userDao;
+    private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
     private final RegistrationService registrationService;
 
-    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder, RegistrationService registrationService) {
+    public UserServiceImp(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, RegistrationService registrationService) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
         this.registrationService = registrationService;
     }
@@ -58,8 +60,16 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User updateUser) {
+    public void updateUser(User updateUser, Set<String> roleNames) {
         updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+
+        Set<Role> rolesUser = new HashSet<>();
+        for (String role : roleNames) {
+            Role roles = roleDao.findByName(role).orElseThrow(() ->
+                    new RuntimeException("Role '" + role + "' not found"));
+            rolesUser.add(roles);
+        }
+        updateUser.setUserRole(rolesUser);
         userDao.save(updateUser);
     }
 

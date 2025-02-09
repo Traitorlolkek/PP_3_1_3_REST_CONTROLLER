@@ -4,41 +4,19 @@
     <meta charset="UTF-8">
     <title>Edit User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <style>
-
-        .buttonLogout {
-            background-color: #f44336; /* Red color for logout */
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-
-        .buttonLogout:hover {
-            background-color: #d32f2f; /* Darker red on hover */
-        }
-    </style>
-
 </head>
 <body>
 <div class="container mt-5">
     <h2>Edit User</h2>
     <form th:action="@{/admin/edit}" method="post" th:object="${user}">
         <input type="hidden" th:field="*{id}"/>
-
         <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" th:field="*{name}" required>
+            <label for="firstName">Name</label>
+            <input type="text" class="form-control" id="firstName" th:field="*{username}" required>
         </div>
 
         <div class="form-group">
-            <label for="lastName">Last Name</label>
+            <label for="password">Password</label>
             <input type="text" class="form-control" id="lastName" th:field="*{last_name}" required>
         </div>
 
@@ -47,31 +25,22 @@
             <input type="email" class="form-control" id="email" th:field="*{email}" required>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="text" class="form-control" id="password" name="password">
-        </div>
 
         <div class="form-group">
-            <label>Roles:</label>
-            <div class="checkbox-group">
-                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER">
-                <label for="roleUser">User</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
-                <label for="roleAdmin">Admin</label>
-            </div>
+            <label for="password">Password</label>
+            <input type="text" class="form-control" id="password" th:field="*{password}" required>
+        </div>
+
+
+        <div>
+            <input type="checkbox" name="roles" value="ROLE_USER" id="roleUser"/>
+            <label for="roleUser">User</label>
+            <input type="checkbox" name="roles" value="ROLE_ADMIN" id="roleAdmin"/>
+            <label for="roleAdmin">Admin</label>
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-
-    <form action="#" th:action="@{/logout}" method="post">
-        <input type="submit" class="buttonLogout" value="Logout"/>
-    </form>
-
-    <a href="/admin/users" class="btn btn-secondary mt-3">Back to Users List</a>
 </div>
 </body>
 </html>
