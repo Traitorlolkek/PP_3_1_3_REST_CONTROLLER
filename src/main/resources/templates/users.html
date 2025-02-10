@@ -87,6 +87,8 @@
         <th>Name</th>
         <th>last_name</th>
         <th>Email</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -95,17 +97,24 @@
         <td th:text="${user.name}"></td>
         <td th:text="${user.last_name}"></td>
         <td th:text="${user.email}"></td>
+        <td>
+            <form th:action="@{/admin/edit/{id}(id=${user.id})}" method="get">
+                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+            </form>
+        </td>
+
+        <td>
+            <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="get">
+                <button type="submit" class="btn btn-primary btn-sm">Delete</button>
+            </form>
+        </td>
     </tr>
+
     </tbody>
 </table>
 <a th:href="@{/admin/add}" class="buttonAdd">Add User</a>
 <br>
 
-<form action="#" th:action="@{/admin/delete}" method="get">
-    <label for="removeId">Введите Id для удаления :</label>
-    <input type="text" id="removeId" name="id" title="Please enter a valid number." required/>
-    <input type="submit" class="button" value="Удалить"/>
-</form>
 
 <form action="#" th:action="@{/admin/find}" method="get">
     <label for="findId">Введите Id для поиска:</label>
@@ -113,11 +122,8 @@
     <input type="submit" class="button" value="Найти пользователя"/>
 </form>
 
-<form action="#" th:action="@{/admin/edit}" method="get">
-    <label for="updateId">Enter ID to update:</label>
-    <input type="text" id="updateId" name="id" title="Please enter a valid number." required/>
-    <input type="submit" class="button" value="Update User"/>
-</form>
+
+
 
 <form action="#" th:action="@{/logout}" method="post">
     <input type="submit" class="buttonLogout" value="Logout"/>

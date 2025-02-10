@@ -20,7 +20,7 @@
             height: 100vh;
             width: 250px;
             position: fixed;
-            top: 0;
+            top: 0; /* Отступ сверху для панели пользователя */
             left: 0;
             background-color: #6c757d; /* Серая боковая панель */
             padding: 20px;
@@ -38,6 +38,7 @@
         .main-content {
             margin-left: 250px;
             padding: 20px;
+            padding-top: 80px; /* Отступ сверху для основного контента */
         }
         .all-users-heading {
             font-size: 1rem; /* Уменьшенный шрифт для "All users" */
@@ -71,13 +72,49 @@
             border-radius: 4px; /* Скругленные углы */
             padding: 20px; /* Отступы внутри формы */
             margin-top: 20px; /* Отступ сверху */
+            max-width: 500px; /* Уменьшенная ширина формы */
+            margin: 0 auto; /* Центрирование формы */
+        }
+        .form-container .form-control {
+            width: 100%; /* Поля ввода занимают всю ширину контейнера */
         }
         .form-label {
             font-weight: bold; /* Жирный шрифт для меток */
         }
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px; /* Отступы внутри панели */
+            background-color: #343a40; /* Темно-серый цвет фона */
+            color: white; /* Белый текст */
+            width: 100%; /* Растягиваем на всю ширину */
+            position: fixed; /* Фиксированное позиционирование */
+            top: 0; /* Верхний край окна */
+            left: 0; /* Левый край окна */
+            z-index: 1000; /* Чтобы панель была поверх других элементов */
+            border-bottom: 1px solid #495057; /* Граница снизу */
+        }
+        .user-info .logout {
+            color: #4b4848; /* Красный цвет для кнопки Logout */
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .user-info .logout:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
     </style>
 </head>
 <body>
+<!-- Панель с информацией о пользователе -->
+<div class="user-info">
+    <div>
+        <span>admin@mail.ru</span> <!-- Email авторизовавшегося пользователя -->
+        <span> | Role: ADMIN USER</span> <!-- Роль пользователя -->
+    </div>
+    <a href="/logout">Logout</a>
+</div>
+
 <!-- Боковая панель -->
 <div class="sidebar">
     <h4 style="color: white;">Select Role</h4>

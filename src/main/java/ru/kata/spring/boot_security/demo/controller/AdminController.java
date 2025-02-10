@@ -45,8 +45,8 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/edit")
-    public String updateUser(@RequestParam(value = "id", required = false) long id, Model model) {
+    @GetMapping("/edit/{id}")
+    public String updateUser(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.readUserById(id));
         return "edit";
     }
@@ -61,8 +61,8 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/delete")
-    public String deleteUserById(@RequestParam(value = "id", required = false) Long id) {
+    @GetMapping("/delete/{id}")
+    public String deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/admin/users";
     }
