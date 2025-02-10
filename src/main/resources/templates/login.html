@@ -1,101 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        /* Настройка ширины полей ввода */
+        .narrow-input {
+            max-width: 300px; /* Уменьшите это значение, если нужно уже */
+            margin: 0; /* Убираем центрирование */
         }
-
-        .login-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 350px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
+        /* Уменьшение расстояния между полями */
         .form-group {
-            margin-bottom: 15px;
-            text-align: left;
+            margin-bottom: 0.0rem; /* Уменьшено расстояние между полями */
         }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
+        /* Жирный шрифт для заголовка */
+        .bold-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem; /* Уменьшаем отступ снизу */
+            text-align: left; /* Выравниваем заголовок по левому краю */
         }
-
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+        /* Уменьшение отступа у кнопки */
+        .btn-signin {
+            margin-top: 0.5rem; /* Приближаем кнопку к полям */
         }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        /* Контейнер для формы */
+        .form-container {
+            max-width: 300px; /* Ограничиваем ширину контейнера */
+            margin: 0 auto; /* Центрируем контейнер */
         }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 10px;
-        }
-
-        .register-link {
-            margin-top: 15px;
-            display: block;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .register-link:hover {
-            text-decoration: underline;
+        /* Уменьшение отступа сверху у формы */
+        .form-container form {
+            margin-top: 0.5rem; /* Приближаем форму к заголовку */
         }
     </style>
 </head>
 <body>
-<div class="login-container">
-    <h1>Login</h1>
-    <form th:action="@{/login}" method="post">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="form-container">
+                <h2 class="bold-title">Please sign in</h2>
+                <form th:action="@{/login}" method="POST">
+                    <div class="form-group narrow-input">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="User name" required>
+                    </div>
+                    <div class="form-group narrow-input">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="d-grid narrow-input">
+                        <button type="submit" class="btn btn-primary btn-signin">Sign in</button>
+                    </div>
+                    <div th:if="${param.error}" class="text-danger">
+                        Неверный email или пароль.
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-        <div th:if="${param.error}" class="error-message">
-            Invalid username or password
-        </div>
-    </form>
-    <a th:href="@{/registration}" class="register-link">Для регистрации нажмите сюда</a>
+    </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

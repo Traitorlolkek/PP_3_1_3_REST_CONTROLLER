@@ -36,7 +36,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void createUser(String userName, String lastName, String email,String password, Set<String> roleNames) {
+    public void createUser(String userName, String lastName, String email, String password, Set<String> roleNames) {
         registrationService.saveUser(userName, lastName, email, password, roleNames);
     }
 
@@ -60,17 +60,24 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User updateUser, Set<String> roleNames) {
-        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-
-        Set<Role> rolesUser = new HashSet<>();
-        for (String role : roleNames) {
-            Role roles = roleDao.findByName(role).orElseThrow(() ->
-                    new RuntimeException("Role '" + role + "' not found"));
-            rolesUser.add(roles);
+    public void updateUser(Long id, String username, String password, String email, Set<String> roleNames) {
+        User user = readUserById(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        if (roleNames == null || roleNames.isEmpty()) {
+            user.setUserRole(user.getUserRole());
+        } else {
+            Set<Role> rolesUser = new HashSet<>();
+            for (String role : roleNames) {
+                Role roles = roleDao.findByName(role).orElseThrow(() ->
+                        new RuntimeException("Role '" + role + "' not found"));
+                rolesUser.add(roles);
+            }
+            user.setUserRole(rolesUser);
         }
-        updateUser.setUserRole(rolesUser);
-        userDao.save(updateUser);
+        userDao.save(user);
     }
 
 

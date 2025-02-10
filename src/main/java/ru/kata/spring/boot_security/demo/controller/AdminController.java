@@ -56,12 +56,8 @@ public class AdminController {
                              @RequestParam String username,
                              @RequestParam String password,
                              @RequestParam String email,
-                             @RequestParam Set<String> roles) {
-        User user = userService.readUserById(id);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        userService.updateUser(user, roles);
+                             @RequestParam(required = false) Set<String> roles) {
+        userService.updateUser(id, username,password,email, roles);
         return "redirect:/admin/users";
     }
 
