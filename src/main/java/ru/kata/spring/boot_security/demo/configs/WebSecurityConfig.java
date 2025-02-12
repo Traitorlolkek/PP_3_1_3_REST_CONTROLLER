@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.kata.spring.boot_security.demo.service.UserDetailService;
 
 
@@ -44,14 +45,12 @@ public class WebSecurityConfig {
                         .successHandler(successUserHandler)
                         .permitAll()
                 ).userDetailsService(userDetailService)
-                .logout((logout) -> logout
-                        .logoutUrl("/logout") // URL для выхода из системы
-                        .logoutSuccessUrl("/login?logout=true") // URL перенаправления после успешного выхода
-                        .invalidateHttpSession(true) // Инвалидация сессии
-                        .deleteCookies("JSESSIONID") // Удаление cookies
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .permitAll()
-                );
+                        .permitAll());
         return http.build();
     }
 

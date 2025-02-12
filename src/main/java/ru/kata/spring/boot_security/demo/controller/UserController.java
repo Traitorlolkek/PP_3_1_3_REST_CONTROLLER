@@ -22,6 +22,6 @@ public class UserController {
         newUser.setLast_name(user.getLast_name());
         newUser.setEmail(user.getEmail());
         model.addAttribute("user", newUser);
-        return "user";
+        return "adminPanel";
     }
 }

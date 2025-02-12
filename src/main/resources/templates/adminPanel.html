@@ -22,8 +22,8 @@
             height: 100vh;
             width: 250px;
             position: fixed;
-            top: 0; /* Отступ сверху для панели пользователя */
-            left: 0;
+            top:50px; /* Отступ сверху для панели пользователя */
+            left: -10px;
             background-color: #eceeef; /* Серая боковая панель */
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -35,6 +35,10 @@
             text-decoration: none;
             color: #1a4baa; /* Белый текст для контраста */
         }
+        .sidebar a.active{
+            background-color: #007bff;
+            color: #cccccc;
+        }
 
         .sidebar a:hover {
             background-color: #1c4ad5; /* Темнее при наведении */
@@ -42,8 +46,8 @@
 
         .main-content {
             margin-left: 250px;
-            padding: 20px;
-            padding-top: 80px; /* Отступ сверху для основного контента */
+            /* Отступ сверху для основного контента */
+            padding: 80px 20px 20px;
         }
 
         .all-users-heading {
@@ -86,7 +90,6 @@
             padding: 20px; /* Отступы внутри формы */
             margin-top: 20px; /* Отступ сверху */
             max-width: 500px; /* Уменьшенная ширина формы */
-            margin: 0 auto; /* Центрирование формы */
         }
 
         .form-container .form-control {
@@ -140,109 +143,106 @@
 
 <!-- Боковая панель -->
 <div class="sidebar">
-    <h4 style="color: white;">Select Role</h4>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" id="adminTab">Admin</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" id="userTab">User</a>
-        </li>
-    </ul>
+    <a class="active" data-toggle="tab" href="#" id="adminTab">Admin</a>
+    <a data-toggle="tab" href="#" id="userTab">User</a>
 </div>
 
 <!-- Основной контент -->
 <div class="main-content">
-    <h1>Admin Panel</h1>
+    <div class="tab-content">
+        <!-- Вкладка Admin -->
+        <div class="tab-pane fade show active" id="adminContent" role="tabpanel">
+            <h1>Admin Panel</h1>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#user-table">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#addUser">New User</a>
+                </li>
+            </ul>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item" role="presentation" >
-            <a class="nav-link active" data-toggle="tab" href="#myTabContent">Users</a>
-        </li>
+            <div class="tab-content">
+                <!-- Вкладка Users -->
+                <div class="tab-pane fade show active" id="user-table" role="tabpanel">
+                    <h2 class="all-users-heading">All users</h2>
+                    <div class="table-container">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${user}">
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.username}"></td>
+                                <td th:text="${user.last_name}"></td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.userRole}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal" th:attr="data-user-id=${user.id}">Edit</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" th:attr="data-user-id=${user.id}">Delete</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" data-toggle="tab" href="#addUser">New User</a>
-        </li>
-    </ul>
-
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="user-table" role="tabpanel" aria-labelledby="user-table-tab">
-            <h2 class="all-users-heading">All users</h2>
-            <div class="table-container">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="user : ${user}">
-                        <td th:text="${user.id}"></td>
-                        <td th:text="${user.username}"></td>
-                        <td th:text="${user.last_name}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td th:text="${user.userRole}"></td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                    data-target="#editModal" th:attr="data-user-id=${user.id}">Edit
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                    data-target="#deleteModal" th:attr="data-user-id=${user.id}">Delete
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <!-- Вкладка New User -->
+                <div class="tab-pane fade" id="addUser" role="tabpanel">
+                    <h2>Add new user</h2>
+                    <div class="form-container">
+                        <form th:action="@{/admin/add}" method="post">
+                            <div class="form-group">
+                                <label for="username" class="form-label">User name</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="role" class="form-label">Role</label>
+                                <select class="form-select" id="role" name="roles" required>
+                                    <option value="ROLE_ADMIN">ADMIN</option>
+                                    <option value="ROLE_USER">USER</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-teal">Add new user</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="addUser">
-            <h2>Add new user</h2>
-            <div class="form-container">
-                <form th:action="@{/admin/add}" method="post">
-                    <div class="form-group">
-                        <label for="username" class="form-label">User name</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                        <div class="invalid.feedback"></div>
-                    </div>
+        <!-- Вкладка User -->
+        <div class="user-details" id="userContent" role="tabpanel">
+            <h1>User Panel</h1>
+            <p>id</p>
 
-                    <div class="form-group">
-                        <label for="last_name" class="form-label">Last name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select" id="role" name="roles" required>
-                            <option value="ROLE_ADMIN">ADMIN</option>
-                            <option value="ROLE_USER">USER</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-teal">Add new user</button>
-                </form>
-            </div>
         </div>
     </div>
 </div>
+
+
 
 <!-- Модальное окно для редактирования -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -288,7 +288,8 @@
 </div>
 
 <!-- Модальное окно для удаления -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -298,7 +299,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form method="post" id="delete">
                     <input type="hidden" id="deleteUserId" name="id">
                     <div class="form-group">
                         <label for="deleteUsername" class="form-label">User name</label>
@@ -318,7 +319,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <form id="deleteForm" method="post">
+                        <form>
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
@@ -335,18 +336,35 @@
 
 <script>
 
-    document.getElementById('adminTab').addEventListener('click', function(event) {
-        event.preventDefault();
+    $(document).ready(function () {
+        // Обработка клика на вкладку "Admin"
+        $('#adminTab').on('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное поведение ссылки
 
-        document.getElementById('users').style.display = 'block';
-        document.getElementById('addUser').style.display = 'none';
-        document.getElementById('userDetails').style.display = 'none';
+            // Скрываем вкладку User и показываем вкладку Admin
+            $('#userContent').hide();
+            $('#adminContent').show();
 
-        document.querySelectorAll('.sidebar').forEach(function(link) {
-            link.classList.remove('active');
+            // Убираем активный класс у всех вкладок и добавляем его к текущей
+            $('.sidebar a').removeClass('active');
+            $(this).addClass('active');
         });
-        this.classList.add('active');
+
+        // Обработка клика на вкладку "User"
+        $('#userTab').on('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное поведение ссылки
+
+            // Скрываем вкладку Admin и показываем вкладку User
+            $('#adminContent').hide();
+            $('#userContent').show();
+
+            // Убираем активный класс у всех вкладок и добавляем его к текущей
+            $('.sidebar a').removeClass('active');
+            $(this).addClass('active');
+        });
     });
+
+
 
 
     // Обработка открытия модального окна редактирования
@@ -354,6 +372,7 @@
         const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
         const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
         const modal = $(this);
+
         fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
             modal.find('#edit').val(user.id);
             modal.find('#editUsername').val(user.username);
@@ -369,14 +388,18 @@
         const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
         const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
         const modal = $(this);
+
+
         fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
             modal.find('#deleteUserId').val(user.id);
             modal.find('#deleteUsername').val(user.username);
             modal.find('#deleteLast_name').val(user.last_name);
             modal.find('#deleteEmail').val(user.email);
-            modal.find('#deleteRole').val(user.role.join(', '));
-            modal.find('#deleteForm').attr('action', `/admin/delete/${userId}`);
+            modal.find('#deleteRole').val(user.role);
+            modal.find('#delete').attr('action', `/admin/delete/${userId}`);
+
         });
+        console.log(event);
     });
 </script>
 </body>
