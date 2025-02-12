@@ -15,13 +15,15 @@ import ru.kata.spring.boot_security.demo.model.User;
 public class UserController {
 
     @GetMapping("/")
-    public String findUser(@AuthenticationPrincipal User user, Model model) {
+    @ResponseBody
+    public User findUser(@AuthenticationPrincipal User user, Model model) {
         User newUser = new User();
         newUser.setId(user.getId());
         newUser.setName(user.getName());
         newUser.setLast_name(user.getLast_name());
         newUser.setEmail(user.getEmail());
+        newUser.setUserRole(user.getUserRole());
         model.addAttribute("user", newUser);
-        return "adminPanel";
+        return newUser;
     }
 }

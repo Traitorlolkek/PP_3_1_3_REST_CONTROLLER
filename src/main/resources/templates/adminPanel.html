@@ -234,9 +234,14 @@
         </div>
 
         <!-- Вкладка User -->
-        <div class="user-details" id="userContent" role="tabpanel">
-            <h1>User Panel</h1>
-            <p>id</p>
+        <div class="user-details" id="userContent" role="tabpanel" style="display: none">
+            <div id="userInfo">
+                <p><strong>ID:</strong> <span id="userId"></span></p>
+                <p><strong>Name:</strong> <span id="user_name"></span></p>
+                <p><strong>Last Name:</strong> <span id="userLastName"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <p><strong>Role:</strong> <span id="userRole"></span></p>
+            </div>
 
         </div>
     </div>
@@ -364,6 +369,33 @@
         });
     });
 
+    // $(document).ready(function () {
+    //     // Выполняем AJAX-запрос к вашему методу
+    //     $.ajax({
+    //         url: '/user/', // URL вашего метода
+    //         method: 'GET',
+    //         success: function (user) {
+    //             // Заполняем поля данными из ответа
+    //             $('#userId').text(user.id);
+    //             $('#userName').text(user.name);
+    //             $('#userLastName').text(user.last_name);
+    //             $('#userEmail').text(user.email);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Ошибка при получении данных:', error);
+    //         }
+    //     });
+    // });
+
+    fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userId').textContent = user.id;
+        document.getElementById('user_name').textContent = user.name;
+        document.getElementById('userLastName').textContent = user.last_name;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userRole').textContent = user.roles;
+
+    })
+
 
 
 
@@ -379,7 +411,7 @@
             modal.find('#editLast_name').val(user.last_name);
             modal.find('#editEmail').val(user.email);
             modal.find('#editPassword').val(user.password);
-            modal.find('#editRole').val(user.role);
+            modal.find('#editRole').val(user.roles);
         })
     });
 
@@ -395,7 +427,7 @@
             modal.find('#deleteUsername').val(user.username);
             modal.find('#deleteLast_name').val(user.last_name);
             modal.find('#deleteEmail').val(user.email);
-            modal.find('#deleteRole').val(user.role);
+            modal.find('#deleteRole').val(user.roles);
             modal.find('#delete').attr('action', `/admin/delete/${userId}`);
 
         });
