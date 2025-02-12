@@ -60,9 +60,10 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, String username, String password, String email, Set<String> roleNames) {
+    public void updateUser(Long id, String username, String lastName, String password, String email, Set<String> roleNames) {
         User user = readUserById(id);
         user.setUsername(username);
+        user.setLast_name(lastName);
         user.setPassword(password);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));

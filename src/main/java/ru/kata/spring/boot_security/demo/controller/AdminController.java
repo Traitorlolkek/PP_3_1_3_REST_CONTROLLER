@@ -23,10 +23,10 @@ public class AdminController {
         this.registrationService = registrationService;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String getAllUser(Model model) {
         model.addAttribute("user", userService.readAllUser());
-        return "users";
+        return "adminPanel";
     }
 
     @GetMapping("/add")
@@ -45,26 +45,27 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/edit/{id}")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.readUserById(id));
-        return "edit";
+    @GetMapping("edit/{id}")
+    @ResponseBody
+    public User updateUser(@PathVariable("id") Long id) {
+        return userService.readUserById(id);
     }
 
-    @PostMapping("/edit")
+    @PostMapping("edit")
     public String updateUser(@RequestParam Long id,
                              @RequestParam String username,
+                             @RequestParam String last_name,
                              @RequestParam String password,
                              @RequestParam String email,
                              @RequestParam(required = false) Set<String> roles) {
-        userService.updateUser(id, username,password,email, roles);
-        return "redirect:/admin/users";
+        userService.updateUser(id, username,last_name, password,email, roles);
+        return "redirect:/admin";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("delete/{id}")
     public String deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/find")
