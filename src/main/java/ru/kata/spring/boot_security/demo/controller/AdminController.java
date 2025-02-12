@@ -42,7 +42,7 @@ public class AdminController {
                           @RequestParam String password,
                           @RequestParam Set<String> roles) {
         registrationService.saveUser(username,lastName,email,password, roles);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("edit/{id}")
@@ -62,7 +62,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("delete/{id}")
+    @PostMapping("delete/{id}")
     public String deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/admin";

@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <!-- Подключение Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .btn-teal {
             background-color: #20c997;
             border-color: #20c997;
             color: white;
         }
+
         .btn-teal:hover {
             background-color: #1aa179;
             border-color: #1aa179;
         }
+
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -26,47 +28,58 @@
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar a {
             display: block;
             padding: 10px;
             text-decoration: none;
             color: #1a4baa; /* Белый текст для контраста */
         }
+
         .sidebar a:hover {
             background-color: #1c4ad5; /* Темнее при наведении */
         }
+
         .main-content {
             margin-left: 250px;
             padding: 20px;
             padding-top: 80px; /* Отступ сверху для основного контента */
         }
+
         .all-users-heading {
             font-size: 1rem; /* Уменьшенный шрифт для "All users" */
             margin-bottom: 1rem;
             font-weight: bold; /* Жирный шрифт */
         }
+
         .table-container {
             border: 1px solid #dee2e6; /* Рамка вокруг таблицы */
             border-radius: 4px; /* Скругленные углы */
             overflow: hidden; /* Чтобы рамка не выходила за пределы таблицы */
         }
+
         .nav-tabs {
             border-bottom: 1px solid #dee2e6; /* Рамка под вкладками */
         }
+
         .nav-tabs .nav-link {
             border: 1px solid transparent; /* Прозрачная рамка для вкладок */
             border-top-left-radius: 4px;
             border-top-right-radius: 4px;
         }
+
         .nav-tabs .nav-link.active {
             border-color: #dee2e6 #dee2e6 #fff; /* Рамка для активной вкладки */
         }
+
         .table {
             margin-bottom: 0; /* Убираем отступ снизу таблицы */
         }
+
         .table th, .table td {
             border: 1px solid #dee2e6; /* Рамка для ячеек таблицы */
         }
+
         .form-container {
             border: 1px solid #dee2e6; /* Рамка вокруг формы */
             border-radius: 4px; /* Скругленные углы */
@@ -75,12 +88,15 @@
             max-width: 500px; /* Уменьшенная ширина формы */
             margin: 0 auto; /* Центрирование формы */
         }
+
         .form-container .form-control {
             width: 100%; /* Поля ввода занимают всю ширину контейнера */
         }
+
         .form-label {
             font-weight: bold; /* Жирный шрифт для меток */
         }
+
         .user-info {
             display: flex;
             justify-content: space-between;
@@ -95,11 +111,13 @@
             z-index: 1000; /* Чтобы панель была поверх других элементов */
             border-bottom: 1px solid #495057; /* Граница снизу */
         }
+
         .user-info .logout {
             color: #6a6969;
             text-decoration: none;
             font-weight: bold;
         }
+
         .user-info .logout:hover {
             text-decoration: underline; /* Подчеркивание при наведении */
         }
@@ -108,10 +126,10 @@
 
 <body>
 <!-- Панель с информацией о пользователе -->
-<div class="user-info">
+<div class="user-info" id="user-info">
     <div>
-        <span>admin@mail.ru</span> <!-- Email авторизовавшегося пользователя -->
-        <span> | Role: ADMIN USER</span> <!-- Роль пользователя -->
+        <span id="userUpPanel"></span> <!-- Email авторизовавшегося пользователя -->
+        <span id="roleUpPanel"></span> <!-- Роль пользователя -->
     </div>
 
     <div class="logout">
@@ -125,25 +143,28 @@
     <h4 style="color: white;">Select Role</h4>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Admin</a>
+            <a class="nav-link active" href="#" id="adminTab">Admin</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">User</a>
+            <a class="nav-link" href="#" id="userTab">User</a>
         </li>
     </ul>
 </div>
 
 <!-- Основной контент -->
 <div class="main-content">
-    <h1 class="mb-4">Admin Panel</h1>
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="user-table-tab" data-bs-toggle="tab" data-bs-target="#user-table" type="button" role="tab" aria-controls="user-table" aria-selected="true">Users table</button>
+    <h1>Admin Panel</h1>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item" role="presentation" >
+            <a class="nav-link active" data-toggle="tab" href="#myTabContent">Users</a>
         </li>
+
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="new-user-tab" data-bs-toggle="tab" data-bs-target="#new-user" type="button" role="tab" aria-controls="new-user" aria-selected="false">New User</button>
+            <a class="nav-link active" data-toggle="tab" href="#addUser">New User</a>
         </li>
     </ul>
+
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="user-table" role="tabpanel" aria-labelledby="user-table-tab">
             <h2 class="all-users-heading">All users</h2>
@@ -168,43 +189,54 @@
                         <td th:text="${user.email}"></td>
                         <td th:text="${user.userRole}"></td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal" th:attr="data-user-id=${user.id}">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#editModal" th:attr="data-user-id=${user.id}">Edit
+                            </button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" th:attr="data-user-id=${user.id}">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#deleteModal" th:attr="data-user-id=${user.id}">Delete
+                            </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="tab-pane fade" id="new-user" role="tabpanel" aria-labelledby="new-user-tab">
-            <h2 class="mb-3">Add new user</h2>
+
+        <div class="tab-pane fade" id="addUser">
+            <h2>Add new user</h2>
             <div class="form-container">
                 <form th:action="@{/admin/add}" method="post">
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="username" class="form-label">User name</label>
                         <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid.feedback"></div>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="form-group">
                         <label for="last_name" class="form-label">Last name</label>
                         <input type="text" class="form-control" id="last_name" name="last_name" required>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="form-group">
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select" id="role" name="roles" required>
                             <option value="ROLE_ADMIN">ADMIN</option>
                             <option value="ROLE_USER">USER</option>
                         </select>
                     </div>
+
                     <button type="submit" class="btn btn-teal">Add new user</button>
                 </form>
             </div>
@@ -255,19 +287,19 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<!-- Модальное окно для удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Edit User</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="hidden" name="id" id="delete">
+                    <input type="hidden" id="deleteUserId" name="id">
                     <div class="form-group">
                         <label for="deleteUsername" class="form-label">User name</label>
                         <input type="text" class="form-control" id="deleteUsername" name="username" readonly>
@@ -282,12 +314,12 @@
                     </div>
                     <div class="form-group">
                         <label for="deleteRole">Roles</label>
-                        <input type="text" class="form-control" id="deleteRole" name="role" readonly>
+                        <input type="text" class="form-control" id="deleteRole" name="roles" readonly>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         <form id="deleteForm" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
@@ -297,23 +329,39 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <script>
+
+    document.getElementById('adminTab').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        document.getElementById('users').style.display = 'block';
+        document.getElementById('addUser').style.display = 'none';
+        document.getElementById('userDetails').style.display = 'none';
+
+        document.querySelectorAll('.sidebar').forEach(function(link) {
+            link.classList.remove('active');
+        });
+        this.classList.add('active');
+    });
+
+
     // Обработка открытия модального окна редактирования
     $('#editModal').on('show.bs.modal', function (event) {
         const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
         const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
         const modal = $(this);
         fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
-        modal.find('#edit').val(user.id);
-        modal.find('#editUsername').val(user.username);
-        modal.find('#editLast_name').val(user.last_name);
-        modal.find('#editEmail').val(user.email);
-        modal.find('#editPassword').val(user.password);
-        modal.find('#editRole').val(user.role);})
+            modal.find('#edit').val(user.id);
+            modal.find('#editUsername').val(user.username);
+            modal.find('#editLast_name').val(user.last_name);
+            modal.find('#editEmail').val(user.email);
+            modal.find('#editPassword').val(user.password);
+            modal.find('#editRole').val(user.role);
+        })
     });
 
     // Обработка открытия модального окна удаления
@@ -322,12 +370,13 @@
         const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
         const modal = $(this);
         fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
-            modal.find('#delete').val(user.id);
+            modal.find('#deleteUserId').val(user.id);
             modal.find('#deleteUsername').val(user.username);
             modal.find('#deleteLast_name').val(user.last_name);
             modal.find('#deleteEmail').val(user.email);
-            modal.find('#deleteRole').val(user.role);})
-            modal.find(`#deleteForm`).attr('action', `/admin/delete/${userId}`)
+            modal.find('#deleteRole').val(user.role.join(', '));
+            modal.find('#deleteForm').attr('action', `/admin/delete/${userId}`);
+        });
     });
 </script>
 </body>
