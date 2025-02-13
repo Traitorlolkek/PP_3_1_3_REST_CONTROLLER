@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +39,8 @@ public class AdminController {
                           @RequestParam String last_name,
                           @RequestParam String email,
                           @RequestParam String password,
-                          @RequestParam Set<String> roles) {
-        registrationService.saveUser(username,last_name,email,password, roles);
+                          @RequestParam Set<String> userRole) {
+        registrationService.saveUser(username,last_name,email,password, userRole);
         return "redirect:/admin/";
     }
 
@@ -57,8 +56,8 @@ public class AdminController {
                              @RequestParam String last_name,
                              @RequestParam String password,
                              @RequestParam String email,
-                             @RequestParam(required = false) Set<String> roles) {
-        userService.updateUser(id, username,last_name, password,email, roles);
+                             @RequestParam(required = false) Set<String> userRole) {
+        userService.updateUser(id, username,last_name, password,email, userRole);
         return "redirect:/admin/";
     }
 

@@ -240,9 +240,8 @@
                 <p><strong>Name:</strong> <span id="user_name"></span></p>
                 <p><strong>Last Name:</strong> <span id="userLastName"></span></p>
                 <p><strong>Email:</strong> <span id="userEmail"></span></p>
-                <p><strong>Role:</strong> <span id="userRole"></span></p>
+                <p><strong>Role:</strong> <span id="myUserRole"></span></p>
             </div>
-
         </div>
     </div>
 </div>
@@ -369,30 +368,18 @@
         });
     });
 
-    // $(document).ready(function () {
-    //     // Выполняем AJAX-запрос к вашему методу
-    //     $.ajax({
-    //         url: '/user/', // URL вашего метода
-    //         method: 'GET',
-    //         success: function (user) {
-    //             // Заполняем поля данными из ответа
-    //             $('#userId').text(user.id);
-    //             $('#userName').text(user.name);
-    //             $('#userLastName').text(user.last_name);
-    //             $('#userEmail').text(user.email);
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.error('Ошибка при получении данных:', error);
-    //         }
-    //     });
-    // });
-
     fetch(`/user/`).then(response => response.json()).then(user => {
+
+        console.log(user);
+        console.log(user.roles)
         document.getElementById('userId').textContent = user.id;
         document.getElementById('user_name').textContent = user.name;
         document.getElementById('userLastName').textContent = user.last_name;
         document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('userRole').textContent = user.roles;
+        const userRole = new Set(user.roles);
+        const oneRoleToPrint = Array.from(userRole).map(roles => roles.name);
+        document.getElementById('myUserRole').textContent = oneRoleToPrint.join(', ');
+
 
     })
 
@@ -411,7 +398,8 @@
             modal.find('#editLast_name').val(user.last_name);
             modal.find('#editEmail').val(user.email);
             modal.find('#editPassword').val(user.password);
-            modal.find('#editRole').val(user.roles);
+            const roleName = user.userRole.name || user.userRole.authority;
+            modal.find('#editRole').text(user.userRole);
         })
     });
 

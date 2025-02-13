@@ -24,6 +24,7 @@ public class UserController {
         newUser.setEmail(user.getEmail());
         newUser.setUserRole(user.getUserRole());
         model.addAttribute("user", newUser);
+        System.out.println(newUser);
         return newUser;
     }
 }
