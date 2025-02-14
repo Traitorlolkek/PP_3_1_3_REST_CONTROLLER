@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Panel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding-top: 75px;
+            box-shadow: 2px 0 5px rgb(255, 255, 255);
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: rgb(255, 255, 255);
+        }
+
+        .sidebar a.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 60px;
+            z-index: 1001;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .user-panel {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .user-info span {
+            font-size: 16px;
+        }
+
+        .logout-container {
+            margin-left: auto;
+            color: #e80000;
+        }
+
+        .table-custom {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-custom th,
+        .table-custom td {
+            border: none;
+            padding: 8px;
+        }
+
+        .gray-block {
+            background-color: #dddddd;
+            padding: 20px;
+            border-radius: 4px 4px 0 0;
+            margin-bottom: -20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .gray-block p {
+            margin: 0;
+            font-size: 16px;
+            color: #171717;
+        }
+
+        .gray-block .blockText {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="user-panel">
+    <div class="user-info" id="user-inform">
+        <span id="usernameDisplay"><strong id="upUsername"></strong></span>
+        <span id="roleDisplay">with roles: <strong id="upRole"></strong></span>
+    </div>
+    <div class="logout-container">
+        <a href="/logout" class="btn-secondary">Logout</a>
+    </div>
+</div>
+<!-- Боковая панель (sidebar) -->
+<div class="sidebar">
+    <a href="#" id="userTab" class="active">User</a>
+</div>
+
+<!-- Основной контент -->
+<div class="main-content">
+    <div class="tab-content">
+        <!-- Вкладка "Users" -->
+        <div id="users" class="tab-pane fade show active">
+            <h2>All Users</h2>
+            <div class="gray-block">
+                <strong class="blockText">About user</strong>
+            </div>
+            <table class="table table-custom table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span id="userDetailId"></span></td>
+                    <td><span id="userDetailUsername"></span></td>
+                    <td><span id="userDetailEmail"></span></td>
+                    <td><span id="userDetailRoles"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    fetch('/user/json')
+        .then(response => response.json())
+        .then(user => {
+            document.getElementById('userDetailId').textContent = user.id;
+            document.getElementById('userDetailUsername').textContent = user.username;
+            document.getElementById('userDetailEmail').textContent = user.email;
+            const roles = new Set(user.roles);
+            const arrRole = Array.from(roles).map(role => role.name);
+            document.getElementById('userDetailRoles').textContent = arrRole.join(", ");
+        })
+
+    fetch('/user/json')
+        .then(response => response.json())
+        .then(user => {
+            document.getElementById('upUsername').textContent = user.username;
+            const roles = new Set(user.roles);
+            const arrRole = Array.from(roles).map(role => role.name);
+            document.getElementById('upRole').textContent = arrRole.join(", ");
+        })
+</script>
+</body>
+</html>
