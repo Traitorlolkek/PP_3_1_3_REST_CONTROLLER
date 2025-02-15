@@ -252,8 +252,8 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="form-group">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-select" id="role" name="roles" required>
+                                <label for="userRole" class="form-label">Role</label>
+                                <select class="form-select" id="userRole" name="userRole" required>
                                     <option value="ROLE_ADMIN">ADMIN</option>
                                     <option value="ROLE_USER">USER</option>
                                 </select>
@@ -420,6 +420,13 @@
     });
 
     fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userUpPanel').textContent = `${user.email} with role`;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
+        }
+
         document.getElementById('userId').textContent = user.id;
         document.getElementById('user_name').textContent = user.name;
         document.getElementById('userLastName').textContent = user.last_name;
@@ -429,16 +436,8 @@
         } else {
             document.getElementById('myUserRole').textContent = 'No roles assigned';
         }
-    })
+    });
 
-    fetch(`/user/`).then(response => response.json()).then(user => {
-        document.getElementById('userUpPanel').textContent = user.email;
-        if (user.userRole && user.userRole.length > 0) {
-            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
-        } else {
-            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
-        }
-    })
 
 
     // Обработка открытия модального окна редактирования

@@ -97,7 +97,7 @@
 <!-- Панель с информацией о пользователе -->
 <div class="user-info" id="user-info">
     <div>
-        <span id="userUpPanel"> with role: </span> <!-- Email авторизовавшегося пользователя -->
+        <span id="userUpPanel"> </span>
         <span id="roleUpPanel"></span> <!-- Роль пользователя -->
     </div>
 
@@ -153,6 +153,13 @@
 <script>
 
     fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userUpPanel').textContent = `${user.email} with role: `;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
+        }
+
         document.getElementById('userId').textContent = user.id;
         document.getElementById('user_name').textContent = user.name;
         document.getElementById('userLastName').textContent = user.last_name;
@@ -164,14 +171,7 @@
         }
     })
 
-    fetch(`/user/`).then(response => response.json()).then(user => {
-        document.getElementById('userUpPanel').textContent = user.email;
-        if (user.userRole && user.userRole.length > 0) {
-            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
-        } else {
-            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
-        }
-    })
+
 
 
 
