@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +7,6 @@
     <!-- Подключение Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .btn-teal {
-            background-color: #20c997;
-            border-color: #20c997;
-            color: white;
-        }
-
-        .btn-teal:hover {
-            background-color: #1aa179;
-            border-color: #1aa179;
-        }
-
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -51,30 +40,11 @@
             padding: 80px 20px 20px;
         }
 
-        .all-users-heading {
-            font-size: 1rem; /* Уменьшенный шрифт для "All users" */
-            margin-bottom: 1rem;
-            font-weight: bold; /* Жирный шрифт */
-        }
 
         .table-container {
             border: 1px solid #dee2e6; /* Рамка вокруг таблицы */
             border-radius: 4px; /* Скругленные углы */
             overflow: hidden; /* Чтобы рамка не выходила за пределы таблицы */
-        }
-
-        .nav-tabs {
-            border-bottom: 1px solid #dee2e6; /* Рамка под вкладками */
-        }
-
-        .nav-tabs .nav-link {
-            border: 1px solid transparent; /* Прозрачная рамка для вкладок */
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-        }
-
-        .nav-tabs .nav-link.active {
-            border-color: #dee2e6 #dee2e6 #fff; /* Рамка для активной вкладки */
         }
 
         .table {
@@ -85,10 +55,6 @@
             border: 1px solid #dee2e6; /* Рамка для ячеек таблицы */
         }
 
-
-        .form-container .form-control {
-            width: 100%; /* Поля ввода занимают всю ширину контейнера */
-        }
 
         .user-info {
             display: flex;
@@ -186,34 +152,6 @@
 
 <script>
 
-    $(document).ready(function () {
-        // Обработка клика на вкладку "Admin"
-        $('#adminTab').on('click', function (event) {
-            event.preventDefault(); // Отменяем стандартное поведение ссылки
-
-            // Скрываем вкладку User и показываем вкладку Admin
-            $('#userContent').hide();
-            $('#adminContent').show();
-
-            // Убираем активный класс у всех вкладок и добавляем его к текущей
-            $('.sidebar a').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        // Обработка клика на вкладку "User"
-        $('#userTab').on('click', function (event) {
-            event.preventDefault(); // Отменяем стандартное поведение ссылки
-
-            // Скрываем вкладку Admin и показываем вкладку User
-            $('#adminContent').hide();
-            $('#userContent').show();
-
-            // Убираем активный класс у всех вкладок и добавляем его к текущей
-            $('.sidebar a').removeClass('active');
-            $(this).addClass('active');
-        });
-    });
-
     fetch(`/user/`).then(response => response.json()).then(user => {
         document.getElementById('userId').textContent = user.id;
         document.getElementById('user_name').textContent = user.name;
@@ -236,38 +174,6 @@
     })
 
 
-    // Обработка открытия модального окна редактирования
-    $('#editModal').on('show.bs.modal', function (event) {
-        const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
-        const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
-        const modal = $(this);
-
-        fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
-            modal.find('#edit').val(user.id);
-            modal.find('#editUsername').val(user.username);
-            modal.find('#editLast_name').val(user.last_name);
-            modal.find('#editEmail').val(user.email);
-            modal.find('#editPassword').val(user.password);
-            modal.find('#editRole').text(user.role);
-        })
-    });
-
-    // Обработка открытия модального окна удаления
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
-        const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
-        const modal = $(this);
-
-
-        fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
-            modal.find('#deleteUserId').val(user.id);
-            modal.find('#deleteUsername').val(user.username);
-            modal.find('#deleteLast_name').val(user.last_name);
-            modal.find('#deleteEmail').val(user.email);
-            modal.find('#deleteUserRole').val(user.userRole.map(role => role.name));
-            modal.find('#delete').attr('action', `/admin/delete/${userId}`);
-        });
-    });
 
 </script>
 </body>

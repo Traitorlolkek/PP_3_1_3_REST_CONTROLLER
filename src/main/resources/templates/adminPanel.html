@@ -463,7 +463,6 @@
         const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
         const modal = $(this);
 
-
         fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
             modal.find('#deleteUserId').val(user.id);
             modal.find('#deleteUsername').val(user.username);
