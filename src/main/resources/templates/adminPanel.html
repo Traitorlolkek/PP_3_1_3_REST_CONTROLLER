@@ -22,11 +22,11 @@
             height: 100vh;
             width: 250px;
             position: fixed;
-            top:50px; /* Отступ сверху для панели пользователя */
-            left: -10px;
+            top:59px; /* Отступ сверху для панели пользователя */
+            left: 0;
             background-color: #eceeef; /* Серая боковая панель */
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar a {
@@ -35,6 +35,7 @@
             text-decoration: none;
             color: #1a4baa; /* Белый текст для контраста */
         }
+
         .sidebar a.active{
             background-color: #007bff;
             color: #cccccc;
@@ -46,7 +47,6 @@
 
         .main-content {
             margin-left: 250px;
-            /* Отступ сверху для основного контента */
             padding: 80px 20px 20px;
         }
 
@@ -85,18 +85,21 @@
         }
 
         .form-container {
-            border: 1px solid #dee2e6; /* Рамка вокруг формы */
-            border-radius: 4px; /* Скругленные углы */
-            padding: 20px; /* Отступы внутри формы */
-            margin-top: 20px; /* Отступ сверху */
-            max-width: 500px; /* Уменьшенная ширина формы */
+            max-width: 2000px; /* Ширина формы */
+            margin: 0 auto; /* Выравнивание по центру */
+            padding: 100px; /* Отступы внутри формы */
+            border: 2px solid #dee2e6; /* Рамка вокруг формы (толщина 2px) */
+            background-color: white; /* Белый фон формы */
+
         }
 
         .form-container .form-control {
+            margin: 0 auto;
             width: 100%; /* Поля ввода занимают всю ширину контейнера */
         }
 
         .form-label {
+            margin: 0 auto;
             font-weight: bold; /* Жирный шрифт для меток */
         }
 
@@ -115,6 +118,14 @@
             border-bottom: 1px solid #495057; /* Граница снизу */
         }
 
+        .user-info-heading {
+            font-size: 2rem; /* Размер шрифта */
+            font-weight: bold; /* Жирный шрифт */
+            text-align: left; /* Выравнивание по центру */
+            margin-bottom: 20px; /* Отступ снизу */
+            color: #343a40; /* Цвет текста */
+        }
+
         .user-info .logout {
             color: #6a6969;
             text-decoration: none;
@@ -124,6 +135,27 @@
         .user-info .logout:hover {
             text-decoration: underline; /* Подчеркивание при наведении */
         }
+
+        .add-new-user-heading {
+            background-color: #f8f9fa; /* Серый фон */
+            padding: 10px; /* Отступы внутри заголовка */
+            text-align: left; /* Выравнивание текста по центру */
+            font-size: 1.5rem; /* Размер шрифта */
+            font-weight: bold; /* Жирный шрифт */
+            margin-bottom: 0; /* Отступ снизу */
+            border: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #ffffff; /* Серый цвет для нечетных строк */
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa; /* Белый цвет для четных строк */
+        }
+
+
+
     </style>
 </head>
 
@@ -131,7 +163,7 @@
 <!-- Панель с информацией о пользователе -->
 <div class="user-info" id="user-info">
     <div>
-        <span id="userUpPanel"></span> <!-- Email авторизовавшегося пользователя -->
+        <span id="userUpPanel">with role: </span> <!-- Email авторизовавшегося пользователя -->
         <span id="roleUpPanel"></span> <!-- Роль пользователя -->
     </div>
 
@@ -155,7 +187,7 @@
             <h1>Admin Panel</h1>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#user-table">Users</a>
+                    <a class="nav-link active" data-toggle="tab" href="#user-table">Users table</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#addUser">New User</a>
@@ -165,7 +197,7 @@
             <div class="tab-content">
                 <!-- Вкладка Users -->
                 <div class="tab-pane fade show active" id="user-table" role="tabpanel">
-                    <h2 class="all-users-heading">All users</h2>
+                    <h2 class="add-new-user-heading">All users</h2>
                     <div class="table-container">
                         <table class="table table-bordered">
                             <thead>
@@ -200,7 +232,7 @@
 
                 <!-- Вкладка New User -->
                 <div class="tab-pane fade" id="addUser" role="tabpanel">
-                    <h2>Add new user</h2>
+                    <h2 class="add-new-user-heading">Add new user</h2>
                     <div class="form-container">
                         <form th:action="@{/admin/add}" method="post">
                             <div class="form-group">
@@ -235,12 +267,29 @@
 
         <!-- Вкладка User -->
         <div class="user-details" id="userContent" role="tabpanel" style="display: none">
+            <h2 class="user-info-heading">User information page</h2>
             <div id="userInfo">
-                <p><strong>ID:</strong> <span id="userId"></span></p>
-                <p><strong>Name:</strong> <span id="user_name"></span></p>
-                <p><strong>Last Name:</strong> <span id="userLastName"></span></p>
-                <p><strong>Email:</strong> <span id="userEmail"></span></p>
-                <p><strong>Role:</strong> <span id="myUserRole"></span></p>
+                <h2 class="add-new-user-heading">About user</h2>
+                <div class="table-container">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <td id="userId"></td>
+                            <td id="user_name"></td>
+                            <td id="userLastName"></td>
+                            <td id="userEmail"></td>
+                            <td id="myUserRole"></td>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -307,19 +356,19 @@
                     <input type="hidden" id="deleteUserId" name="id">
                     <div class="form-group">
                         <label for="deleteUsername" class="form-label">User name</label>
-                        <input type="text" class="form-control" id="deleteUsername" name="username" readonly>
+                        <input type="text" class="form-control" id="deleteUsername" readonly>
                     </div>
                     <div class="form-group">
                         <label for="deleteLast_name" class="form-label">Last name</label>
-                        <input type="text" class="form-control" id="deleteLast_name" name="last_name" readonly>
+                        <input type="text" class="form-control" id="deleteLast_name" readonly>
                     </div>
                     <div class="form-group">
                         <label for="deleteEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="deleteEmail" name="email" readonly>
+                        <input type="email" class="form-control" id="deleteEmail" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="deleteRole">Roles</label>
-                        <input type="text" class="form-control" id="deleteRole" name="roles" readonly>
+                        <label for="deleteUserRole">Roles</label>
+                        <input type="text" class="form-control" id="deleteUserRole" readonly>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -348,6 +397,7 @@
             // Скрываем вкладку User и показываем вкладку Admin
             $('#userContent').hide();
             $('#adminContent').show();
+            $('#user-info').show();
 
             // Убираем активный класс у всех вкладок и добавляем его к текущей
             $('.sidebar a').removeClass('active');
@@ -361,6 +411,7 @@
             // Скрываем вкладку Admin и показываем вкладку User
             $('#adminContent').hide();
             $('#userContent').show();
+            $('#user-info').show();
 
             // Убираем активный класс у всех вкладок и добавляем его к текущей
             $('.sidebar a').removeClass('active');
@@ -369,21 +420,25 @@
     });
 
     fetch(`/user/`).then(response => response.json()).then(user => {
-
-        console.log(user);
-        console.log(user.roles)
         document.getElementById('userId').textContent = user.id;
         document.getElementById('user_name').textContent = user.name;
         document.getElementById('userLastName').textContent = user.last_name;
         document.getElementById('userEmail').textContent = user.email;
-        const userRole = new Set(user.roles);
-        const oneRoleToPrint = Array.from(userRole).map(roles => roles.name);
-        document.getElementById('myUserRole').textContent = oneRoleToPrint.join(', ');
-
-
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('myUserRole').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('myUserRole').textContent = 'No roles assigned';
+        }
     })
 
-
+    fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userUpPanel').textContent = user.email;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
+        }
+    })
 
 
     // Обработка открытия модального окна редактирования
@@ -398,8 +453,7 @@
             modal.find('#editLast_name').val(user.last_name);
             modal.find('#editEmail').val(user.email);
             modal.find('#editPassword').val(user.password);
-            const roleName = user.userRole.name || user.userRole.authority;
-            modal.find('#editRole').text(user.userRole);
+            modal.find('#editRole').text(user.role);
         })
     });
 
@@ -415,12 +469,11 @@
             modal.find('#deleteUsername').val(user.username);
             modal.find('#deleteLast_name').val(user.last_name);
             modal.find('#deleteEmail').val(user.email);
-            modal.find('#deleteRole').val(user.roles);
+            modal.find('#deleteUserRole').val(user.userRole.map(role => role.name));
             modal.find('#delete').attr('action', `/admin/delete/${userId}`);
-
         });
-        console.log(event);
     });
+
 </script>
 </body>
 </html>

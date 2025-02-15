@@ -15,6 +15,7 @@
             <p class="card-text"><strong>Username:</strong> <span th:text="${user.username}"></span></p>
             <p class="card-text"><strong>LastName:</strong> <span th:text="${user.last_name}"></span></p>
             <p class="card-text"><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p class="card-text"><strong>Role:</strong> <span th:text="${user.userRole}"></span></p>
             <form action="#" th:action="@{/logout}" method="post">
                 <input type="submit" class="buttonLogout" value="Logout"/>
             </form>

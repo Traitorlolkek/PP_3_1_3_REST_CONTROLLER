@@ -32,7 +32,7 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
         if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/user/");
+            httpServletResponse.sendRedirect("/user/user");
         } else if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin/");
         }

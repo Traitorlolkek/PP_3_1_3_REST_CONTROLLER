@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-teal {
+            background-color: #20c997;
+            border-color: #20c997;
+            color: white;
+        }
+
+        .btn-teal:hover {
+            background-color: #1aa179;
+            border-color: #1aa179;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 50px; /* Отступ сверху для панели пользователя */
+            left: -10px;
+            background-color: #eceeef; /* Серая боковая панель */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #1a4baa; /* Белый текст для контраста */
+        }
+
+        .sidebar a.active {
+            background-color: #007bff;
+            color: #cccccc;
+        }
+
+        .sidebar a:hover {
+            background-color: #1c4ad5; /* Темнее при наведении */
+        }
+
+        .main-content {
+            margin-left: 250px;
+            /* Отступ сверху для основного контента */
+            padding: 80px 20px 20px;
+        }
+
+        .all-users-heading {
+            font-size: 1rem; /* Уменьшенный шрифт для "All users" */
+            margin-bottom: 1rem;
+            font-weight: bold; /* Жирный шрифт */
+        }
+
+        .table-container {
+            border: 1px solid #dee2e6; /* Рамка вокруг таблицы */
+            border-radius: 4px; /* Скругленные углы */
+            overflow: hidden; /* Чтобы рамка не выходила за пределы таблицы */
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6; /* Рамка под вкладками */
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent; /* Прозрачная рамка для вкладок */
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .nav-tabs .nav-link.active {
+            border-color: #dee2e6 #dee2e6 #fff; /* Рамка для активной вкладки */
+        }
+
+        .table {
+            margin-bottom: 0; /* Убираем отступ снизу таблицы */
+        }
+
+        .table th, .table td {
+            border: 1px solid #dee2e6; /* Рамка для ячеек таблицы */
+        }
+
+
+        .form-container .form-control {
+            width: 100%; /* Поля ввода занимают всю ширину контейнера */
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px; /* Отступы внутри панели */
+            background-color: #343a40; /* Темно-серый цвет фона */
+            color: white; /* Белый текст */
+            width: 100%; /* Растягиваем на всю ширину */
+            position: fixed; /* Фиксированное позиционирование */
+            top: 0; /* Верхний край окна */
+            left: 0; /* Левый край окна */
+            z-index: 1000; /* Чтобы панель была поверх других элементов */
+            border-bottom: 1px solid #495057; /* Граница снизу */
+        }
+
+        .user-info .logout {
+            color: #6a6969;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .user-info .logout:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
+
+        .add-new-user-heading {
+            background-color: #f8f9fa; /* Серый фон */
+            padding: 10px; /* Отступы внутри заголовка */
+            text-align: left; /* Выравнивание текста по центру */
+            font-size: 1.5rem; /* Размер шрифта */
+            font-weight: bold; /* Жирный шрифт */
+            margin-bottom: 0; /* Отступ снизу */
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Панель с информацией о пользователе -->
+<div class="user-info" id="user-info">
+    <div>
+        <span id="userUpPanel"> with role: </span> <!-- Email авторизовавшегося пользователя -->
+        <span id="roleUpPanel"></span> <!-- Роль пользователя -->
+    </div>
+
+    <div class="logout">
+        <a href="/logout" class="btn">Logout</a>
+    </div>
+
+</div>
+
+<!-- Боковая панель -->
+<div class="sidebar">
+
+    <a class="active" data-toggle="tab" href="#" id="userTab">User</a>
+</div>
+
+<!-- Основной контент -->
+<div class="main-content">
+    <div class="tab-content">
+        <h2 class="user-info-heading">User information page</h2>
+        <div class="tab-pane fade show active" id="user-table" role="tabpanel">
+            <h2 class="add-new-user-heading">All users</h2>
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="userId"></td>
+                        <td id="user_name"></td>
+                        <td id="userLastName"></td>
+                        <td id="userEmail"></td>
+                        <td id="myUserRole"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        // Обработка клика на вкладку "Admin"
+        $('#adminTab').on('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное поведение ссылки
+
+            // Скрываем вкладку User и показываем вкладку Admin
+            $('#userContent').hide();
+            $('#adminContent').show();
+
+            // Убираем активный класс у всех вкладок и добавляем его к текущей
+            $('.sidebar a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Обработка клика на вкладку "User"
+        $('#userTab').on('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное поведение ссылки
+
+            // Скрываем вкладку Admin и показываем вкладку User
+            $('#adminContent').hide();
+            $('#userContent').show();
+
+            // Убираем активный класс у всех вкладок и добавляем его к текущей
+            $('.sidebar a').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+
+    fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userId').textContent = user.id;
+        document.getElementById('user_name').textContent = user.name;
+        document.getElementById('userLastName').textContent = user.last_name;
+        document.getElementById('userEmail').textContent = user.email;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('myUserRole').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('myUserRole').textContent = 'No roles assigned';
+        }
+    })
+
+    fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userUpPanel').textContent = user.email;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
+        }
+    })
+
+
+    // Обработка открытия модального окна редактирования
+    $('#editModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
+        const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
+        const modal = $(this);
+
+        fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
+            modal.find('#edit').val(user.id);
+            modal.find('#editUsername').val(user.username);
+            modal.find('#editLast_name').val(user.last_name);
+            modal.find('#editEmail').val(user.email);
+            modal.find('#editPassword').val(user.password);
+            modal.find('#editRole').text(user.role);
+        })
+    });
+
+    // Обработка открытия модального окна удаления
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Кнопка, которая вызвала модальное окно
+        const userId = button.data('user-id'); // Извлечение информации из data-* атрибутов
+        const modal = $(this);
+
+
+        fetch(`/admin/edit/${userId}`).then(response => response.json()).then(user => {
+            modal.find('#deleteUserId').val(user.id);
+            modal.find('#deleteUsername').val(user.username);
+            modal.find('#deleteLast_name').val(user.last_name);
+            modal.find('#deleteEmail').val(user.email);
+            modal.find('#deleteUserRole').val(user.userRole.map(role => role.name));
+            modal.find('#delete').attr('action', `/admin/delete/${userId}`);
+        });
+    });
+
+</script>
+</body>
+</html>

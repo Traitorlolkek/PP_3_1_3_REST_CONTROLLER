@@ -47,13 +47,6 @@ public class User implements UserDetails {
 
     }
 
-    public User(String name, String last_name, String email,String password) {
-        this.username = name;
-        this.last_name = last_name;
-        this.email = email;
-        this.password = password;
-    }
-
     public Long getId() {
         return id;
     }

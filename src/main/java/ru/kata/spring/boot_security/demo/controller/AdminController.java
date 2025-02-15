@@ -28,11 +28,11 @@ public class AdminController {
         return "adminPanel";
     }
 
-    @GetMapping("/add")
-    public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        return "/userForm";
-    }
+//    @GetMapping("/add")
+//    public String addUser(Model model) {
+//        model.addAttribute("user", new User());
+//        return "/userForm";
+//    }
 
     @PostMapping("/add")
     public String addUser(@RequestParam String username,
