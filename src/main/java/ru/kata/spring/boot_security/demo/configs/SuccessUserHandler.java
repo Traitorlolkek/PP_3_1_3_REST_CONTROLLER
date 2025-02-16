@@ -18,23 +18,25 @@ import java.util.Set;
 
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
-    private final UserService userService;
-
-    public SuccessUserHandler(@Lazy UserService userService) {
-        this.userService = userService;
-    }
+//    private final UserService userService;
+//
+//    public SuccessUserHandler(@Lazy UserService userService) {
+//        this.userService = userService;
+//    }
 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
+//
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
         if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/user/user");
+//            httpServletResponse.sendRedirect("/user/user");
+            httpServletResponse.sendRedirect("/userPanel.html");
         } else if (roles.contains("ROLE_ADMIN")) {
-            httpServletResponse.sendRedirect("/admin/");
+//            httpServletResponse.sendRedirect("/admin/");
+            httpServletResponse.sendRedirect("/adminPanel.html");
         }
     }
 }

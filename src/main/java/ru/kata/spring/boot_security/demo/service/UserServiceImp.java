@@ -20,13 +20,11 @@ public class UserServiceImp implements UserService {
     private final UserDao userDao;
     private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
-    private final RegistrationService registrationService;
 
-    public UserServiceImp(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, RegistrationService registrationService) {
+    public UserServiceImp(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
-        this.registrationService = registrationService;
     }
 
     @Transactional
@@ -37,7 +35,12 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional
     public void createUser(String userName, String lastName, String email, String password, Set<String> roleNames) {
-        registrationService.saveUser(userName, lastName, email, password, roleNames);
+        User user = new User();
+        user.setUsername(userName);
+        user.setLast_name(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        userDao.save(user);
     }
 
     @Override
@@ -60,26 +63,19 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, String username, String lastName, String password, String email, Set<String> roleNames) {
-        User user = readUserById(id);
-        user.setUsername(username);
-        user.setLast_name(lastName);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        if (roleNames == null || roleNames.isEmpty()) {
-            user.setUserRole(user.getUserRole());
-        } else {
-            Set<Role> rolesUser = new HashSet<>();
-            for (String role : roleNames) {
-                Role roles = roleDao.findByName(role).orElseThrow(() ->
-                        new RuntimeException("Role '" + role + "' not found"));
-                rolesUser.add(roles);
-            }
-            user.setUserRole(rolesUser);
+    public User updateUser(User user) {
+        User userForUpdate = userDao.findById(user.getId()).orElseThrow();
+        userForUpdate.setUsername(user.getUsername());
+        userForUpdate.setLast_name(user.getLast_name());
+        userForUpdate.setEmail(user.getEmail());
+        userForUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        for (Role role : user.getUserRole()) {
+            Role roleBase = roleDao.findByName(role.getName()).orElseThrow(() ->
+                    new RuntimeException("Role '" + role + "' not found"));
+            roles.add(roleBase);
         }
-        userDao.save(user);
+        userForUpdate.setUserRole(roles);
+        return userDao.save(userForUpdate);
     }
-
-
 }

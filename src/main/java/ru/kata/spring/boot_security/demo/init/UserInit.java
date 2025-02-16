@@ -34,11 +34,27 @@ public class UserInit {
         }
 
         if (userService.findByUsername("admin").isEmpty()) {
-            registrationService.saveUser("admin", "admin","admin@admin.com","root", Set.of("ROLE_ADMIN"));
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setLast_name("admin");
+            admin.setEmail("admin@admin.com");
+            admin.setPassword("root");
+            Role roleBase = roleService.findByName("ROLE_ADMIN").orElseThrow(() ->
+                    new RuntimeException("Роль не найдена"));
+            admin.setUserRole(Set.of(roleBase));
+            registrationService.saveUser(admin);
         }
 
         if (userService.findByUsername("user").isEmpty()) {
-            registrationService.saveUser("user", "user","user@user.com","root", Set.of("ROLE_USER"));
+            User user = new User();
+            user.setUsername("user");
+            user.setLast_name("user");
+            user.setEmail("user@user.com");
+            user.setPassword("root");
+            Role roleBase = roleService.findByName("ROLE_USER").orElseThrow(() ->
+                    new RuntimeException("Роль не найдена"));
+            user.setUserRole(Set.of(roleBase));
+            registrationService.saveUser(user);
         }
     }
 

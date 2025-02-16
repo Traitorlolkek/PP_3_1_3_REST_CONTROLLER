@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
@@ -22,22 +23,17 @@ public class RegistrationService {
         this.roleDao = roleDao;
     }
 
-
-    public void saveUser(String userName, String lastName, String email, String password, Set<String> roleNames) {
-        User user = new User();
-        user.setName(userName);
-        user.setLast_name(lastName);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-
+    @Transactional
+    public User saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
-        for (String roleName : roleNames) {
-            Role role = roleDao.findByName(roleName).orElseThrow(() ->
-                    new RuntimeException("Role '" + roleName + "' not found"));
-            roles.add(role);
+        for (Role role : user.getUserRole()) {
+            Role roleBase = roleDao.findByName(role.getName()).orElseThrow(() ->
+                    new RuntimeException("Role '" + role + "' not found"));
+            roles.add(roleBase);
         }
         user.setUserRole(roles);
-
         userDao.save(user);
+        return user;
     }
 }
