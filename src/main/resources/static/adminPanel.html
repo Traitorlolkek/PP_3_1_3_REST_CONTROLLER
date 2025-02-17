@@ -233,7 +233,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="userRole" class="form-label">Role</label>
-                                <select class="form-select" id="userRole" name="userRole" required>
+                                <select class="form-select" id="userRole" name="userRole" multiple required>
                                     <option value="ROLE_ADMIN">ADMIN</option>
                                     <option value="ROLE_USER">USER</option>
                                 </select>
@@ -307,7 +307,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editRole" class="form-label">Role</label>
-                        <select class="form-select" id="editRole" name="roles" required>
+                        <select class="form-select" id="editRole" name="roles" multiple required>
                             <option value="ROLE_ADMIN">ADMIN</option>
                             <option value="ROLE_USER">USER</option>
                         </select>
@@ -461,8 +461,12 @@
             modal.find('#editLast_name').val(user.last_name);
             modal.find('#editEmail').val(user.email);
             modal.find('#editPassword').val(user.password);
-            modal.find('#editRole').text(user.role);
-        })
+
+            // Устанавливаем выбранные роли
+            const roles = user.userRole.map(role => role.name || role.authority);
+            const select = modal.find('#editRole');
+            select.val(roles);
+        });
     });
 
 
@@ -485,38 +489,45 @@
 
 <script>
     document.getElementById('addUserForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Отменяем стандартное поведение формы
 
         const user = {
             username: document.getElementById('username').value,
             last_name: document.getElementById('last_name').value,
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
-            userRole: Array.from(document.getElementById('userRole').selectedOptions).map(opinions => opinions.value)
+            userRole: Array.from(document.getElementById('userRole').selectedOptions).map(option => option.value)
         };
-        addUser(user);
-    });
-</script>
 
-<script>
-    function addUser(user) {
-        fetch('/admin/add',{
+        fetch('/admin/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(user)
-        }).then(response => {
-            if(!response.ok){
-                throw new Error("все плохо");
-            }
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            window.location.href = '/adminPanel.html'
-            fetchAndUpdateUsers();
         })
-    }
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Ошибка при добавлении пользователя");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Пользователь успешно добавлен:", data);
+
+                // Очищаем форму
+                document.getElementById('addUserForm').reset();
+
+                // Обновляем таблицу пользователей
+                fetchAndUpdateUsers();
+
+                // Переключаемся на вкладку "Users table"
+                $('.nav-tabs a[href="#user-table"]').tab('show');
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    });
 </script>
 
 <script>
@@ -534,7 +545,7 @@
             last_name: document.getElementById('editLast_name').value,
             email: document.getElementById('editEmail').value,
             password: document.getElementById('editPassword').value,
-            userRole: Array.from(document.getElementById('editRole').selectedOptions).map(opinions => opinions.value)
+            userRole: Array.from(document.getElementById('editRole').selectedOptions).map(option => option.value)
         };
 
         fetch('/admin/edit', {
@@ -608,7 +619,7 @@
         fetch('/admin/')
             .then(response => response.json())
             .then(users => {
-                const tbody = document.querySelector('#user-table tbody');
+                const tbody = document.querySelector('#user-table tbody');Ку
                 tbody.innerHTML = ''; // Очищаем таблицу перед добавлением новых данных
 
                 users.forEach(user => {
@@ -627,10 +638,9 @@
                     </td>
                 `;
                     tbody.appendChild(row);
-
                 });
             })
-            .catch(error => console.error('Error fetching users:', error));
+            .catch(error => console.error('Ошибка при загрузке пользователей:', error));
     }
 </script>
 
