@@ -253,7 +253,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="userRole" class="form-label">Role</label>
-                                <select class="form-select" id="userRole" name="userRole" required>
+                                <select class="form-select" id="userRole" name="userRole" multiple required>
                                     <option value="ROLE_ADMIN">ADMIN</option>
                                     <option value="ROLE_USER">USER</option>
                                 </select>
@@ -328,7 +328,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editRole" class="form-label">Role</label>
-                        <select class="form-select" id="editRole" name="roles" required>
+                        <select class="form-select" id="editRole" name="userRole" multiple required>
                             <option value="ROLE_ADMIN">ADMIN</option>
                             <option value="ROLE_USER">USER</option>
                         </select>
@@ -452,8 +452,12 @@
             modal.find('#editLast_name').val(user.last_name);
             modal.find('#editEmail').val(user.email);
             modal.find('#editPassword').val(user.password);
-            modal.find('#editRole').text(user.role);
-        })
+
+            // Устанавливаем выбранные роли
+            const roles = user.userRole.map(role => role.name || role.authority);
+            const select = modal.find('#editRole');
+            select.val(roles);
+        });
     });
 
     // Обработка открытия модального окна удаления
