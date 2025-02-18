@@ -565,7 +565,7 @@
             .then(data => {
                 console.log("Пользователь успешно обновлен", data);
                 $('#editModal').modal('hide');
-                fetchAndUpdateUsers(); // Обновляем таблицу
+                fetchAndUpdateUsers();
             })
             .catch(error => {
                 console.error('Ошибка:', error);
@@ -619,8 +619,8 @@
         fetch('/admin/')
             .then(response => response.json())
             .then(users => {
-                const tbody = document.querySelector('#user-table tbody');Ку
-                tbody.innerHTML = ''; // Очищаем таблицу перед добавлением новых данных
+                const tbody = document.querySelector('#user-table tbody');
+                tbody.innerHTML = '';
 
                 users.forEach(user => {
                     const row = document.createElement('tr');
