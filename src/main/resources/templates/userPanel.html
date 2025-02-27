@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 50px; /* Отступ сверху для панели пользователя */
+            left: -10px;
+            background-color: #eceeef; /* Серая боковая панель */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #1a4baa; /* Белый текст для контраста */
+        }
+
+        .sidebar a.active {
+            background-color: #007bff;
+            color: #cccccc;
+        }
+
+        .sidebar a:hover {
+            background-color: #1c4ad5; /* Темнее при наведении */
+        }
+
+        .main-content {
+            margin-left: 250px;
+            /* Отступ сверху для основного контента */
+            padding: 80px 20px 20px;
+        }
+
+
+        .table-container {
+            border: 1px solid #dee2e6; /* Рамка вокруг таблицы */
+            border-radius: 4px; /* Скругленные углы */
+            overflow: hidden; /* Чтобы рамка не выходила за пределы таблицы */
+        }
+
+        .table {
+            margin-bottom: 0; /* Убираем отступ снизу таблицы */
+        }
+
+        .table th, .table td {
+            border: 1px solid #dee2e6; /* Рамка для ячеек таблицы */
+        }
+
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px; /* Отступы внутри панели */
+            background-color: #343a40; /* Темно-серый цвет фона */
+            color: white; /* Белый текст */
+            width: 100%; /* Растягиваем на всю ширину */
+            position: fixed; /* Фиксированное позиционирование */
+            top: 0; /* Верхний край окна */
+            left: 0; /* Левый край окна */
+            z-index: 1000; /* Чтобы панель была поверх других элементов */
+            border-bottom: 1px solid #495057; /* Граница снизу */
+        }
+
+        .user-info .logout {
+            color: #6a6969;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .user-info .logout:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
+
+        .add-new-user-heading {
+            background-color: #f8f9fa; /* Серый фон */
+            padding: 10px; /* Отступы внутри заголовка */
+            text-align: left; /* Выравнивание текста по центру */
+            font-size: 1.5rem; /* Размер шрифта */
+            font-weight: bold; /* Жирный шрифт */
+            margin-bottom: 0; /* Отступ снизу */
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Панель с информацией о пользователе -->
+<div class="user-info" id="user-info">
+    <div>
+        <span id="userUpPanel"> </span>
+        <span id="roleUpPanel"></span> <!-- Роль пользователя -->
+    </div>
+
+    <div class="logout">
+        <a href="/logout" class="btn">Logout</a>
+    </div>
+
+</div>
+
+<!-- Боковая панель -->
+<div class="sidebar">
+
+    <a class="active" data-toggle="tab" href="#" id="userTab">User</a>
+</div>
+
+<!-- Основной контент -->
+<div class="main-content">
+    <div class="tab-content">
+        <h2 class="user-info-heading">User information page</h2>
+        <div class="tab-pane fade show active" id="user-table" role="tabpanel">
+            <h2 class="add-new-user-heading">All users</h2>
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="userId"></td>
+                        <td id="user_name"></td>
+                        <td id="userLastName"></td>
+                        <td id="userEmail"></td>
+                        <td id="myUserRole"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+
+    fetch(`/user/`).then(response => response.json()).then(user => {
+        document.getElementById('userUpPanel').textContent = `${user.email} with role: `;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('roleUpPanel').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('roleUpPanel').textContent = 'No roles assigned';
+        }
+
+        document.getElementById('userId').textContent = user.id;
+        document.getElementById('user_name').textContent = user.name;
+        document.getElementById('userLastName').textContent = user.last_name;
+        document.getElementById('userEmail').textContent = user.email;
+        if (user.userRole && user.userRole.length > 0) {
+            document.getElementById('myUserRole').textContent = user.userRole.map(role => role.name || role.authority).join(', ');
+        } else {
+            document.getElementById('myUserRole').textContent = 'No roles assigned';
+        }
+    })
+
+
+
+
+
+</script>
+</body>
+</html>
