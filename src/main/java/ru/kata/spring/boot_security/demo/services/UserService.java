@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -18,27 +19,32 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public User add(User user) {
+        String passEncoder = passwordEncoder.encode(user.getPassword());
+        user.setPassword(passEncoder);
         return userRepository.save(user);
     }
 
     @Transactional
     public void delete(Long id) {
+        userRepository.getById(id).getRoles().clear();
         userRepository.deleteById(id);
     }
 
     @Transactional
     public User update(Long id, User user) {
         Optional<User> updatableUserOptional = userRepository.findById(id);
-        if(updatableUserOptional.isEmpty()) {
+        if (updatableUserOptional.isEmpty()) {
             throw new RuntimeException("User not found with ID " + id);
         }
         User updatableUser = updatableUserOptional.get();
@@ -59,7 +65,12 @@ public class UserService {
 
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found with ID " + id));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID " + id));
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
     }
 
     @Transactional

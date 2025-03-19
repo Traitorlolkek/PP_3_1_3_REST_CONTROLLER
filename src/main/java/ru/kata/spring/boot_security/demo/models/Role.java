@@ -19,7 +19,7 @@ public class Role implements GrantedAuthority {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private Set <User> users = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
 
     public Role() {
@@ -80,7 +80,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return this.getName().toUpperCase();
+        return "ROLE_" + this.getName().toUpperCase();
     }
 }
 

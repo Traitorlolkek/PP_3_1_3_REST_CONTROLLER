@@ -9,9 +9,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,6 +24,13 @@ public class AdminController {
         this.roleService = roleService;
     }
 
+    @GetMapping
+    public String adminPage(Model model) {
+        List<User> users = userService.findAll();  // Получаем всех пользователей
+        model.addAttribute("users", users);  // Добавляем пользователей в модель
+        return "admin/users";  // Возвращаем имя шаблона
+    }
+
     // Страница для создания и редактирования пользователя
     @GetMapping("/edit/{id}")
     public String editUserForm(@PathVariable Long id, Model model) {
@@ -33,7 +38,7 @@ public class AdminController {
         List<Role> roles = roleService.findAllRole();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
-        return "admin/user-form";
+        return "admin/user-form-update";
     }
 
     // Обработка сохранения изменений в пользователе

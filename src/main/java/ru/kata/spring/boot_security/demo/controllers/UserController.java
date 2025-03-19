@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping
     public String getUserPage(Principal principal, Model model) {
-        User user = userService.findById(Long.valueOf(principal.getName()));  // Получаем пользователя по имени (идентификатору)
+        User user = userService.findByUsername(principal.getName());  // Получаем пользователя по имени (идентификатору)
         model.addAttribute("user", user);
         return "user/user-page";  // Страница с информацией о пользователе
     }

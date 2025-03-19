@@ -8,7 +8,7 @@
 <body>
 <h1>Create/Update User</h1>
 
-<form th:action="@{/admin/create}" th:object="${user}" method="post">
+<form th:action="@{/admin/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
 
   <!-- Имя пользователя -->
   <label for="username">Username</label>

@@ -20,10 +20,12 @@ public class RoleService {
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
+
     @Transactional
     public Role add(Role role) {
-       return roleRepository.save(role);
+        return roleRepository.save(role);
     }
+
     @Transactional
     public void delete(Long id) {
         roleRepository.deleteById(id);
@@ -39,13 +41,14 @@ public class RoleService {
 
     public Role findRoleById(Long id) {
         return roleRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Role not found by ID " + id));
+                .orElseThrow(() -> new RuntimeException("Role not found by ID " + id));
     }
 
     public Role findRoleByName(String name) {
         return roleRepository.findByName(name)
-                .orElseThrow(()-> new RuntimeException("Role not found by name " + name));
+                .orElseThrow(() -> new RuntimeException("Role not found by name " + name));
     }
+
     @Transactional
     public Role update(Long id, Role role) {
         Optional<Role> updatableRoleOptional = roleRepository.findById(id);
