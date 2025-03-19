@@ -134,6 +134,10 @@ public class User implements UserDetails {
         return roles;
     }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -141,9 +145,18 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", age=" + age +
+                ", age=" + age + '\'' +
+                ", roles: " + this.getRolesAsString() +
                 '}';
     }
+
+    public String getRolesAsString() {
+        return roles.stream()
+                .map(Role::getName)
+                .sorted()
+                .collect(Collectors.joining(", ", "[", "]"));
+    }
+
 
     @Override
     public boolean equals(Object o) {

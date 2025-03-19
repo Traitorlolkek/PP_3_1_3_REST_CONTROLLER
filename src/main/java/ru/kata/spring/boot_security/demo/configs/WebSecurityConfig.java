@@ -31,17 +31,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/login", "/register").permitAll()  // Страница входа и регистрации доступны всем
+                .antMatchers("/admin/**").hasRole("ADMIN")  // Администратор имеет доступ только к /admin
+                .antMatchers("/user/**").hasRole("USER")  // Пользователь имеет доступ только к /user
+                .anyRequest().authenticated()  // Все остальные страницы требуют аутентификации
                 .and()
-                .formLogin().successHandler(successUserHandler)
+                .formLogin()
+                .loginPage("/login")  // Страница логина
+                .successHandler(successUserHandler)  // Устанавливаем SuccessUserHandler
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")  // Перенаправление на страницу логина после выхода
                 .permitAll();
     }
 
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -49,18 +55,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new  BCryptPasswordEncoder();
     }
-
-    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+</head>
+<body>
+<h1>User Information</h1>
+<p>ID: <span th:text="${user.id}"></span></p>
+<p>Username: <span th:text="${user.username}"></span></p>
+<p>Name: <span th:text="${user.name}"></span></p>
+<p>Surname: <span th:text="${user.surname}"></span></p>
+<p>Age: <span th:text="${user.age}"></span></p>
+<p>Roles: <span th:text="${user.rolesAsString}"></span></p>
+</body>
+</html>
