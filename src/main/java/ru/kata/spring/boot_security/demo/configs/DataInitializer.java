@@ -10,14 +10,10 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 @Component
-public class DataInitializer  implements CommandLineRunner{
+public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -28,6 +24,7 @@ public class DataInitializer  implements CommandLineRunner{
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {

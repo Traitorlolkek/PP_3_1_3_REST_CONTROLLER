@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class RoleServiceImp implements  RoleService{
+public class RoleServiceImp implements RoleService {
     private final RoleRepository roleRepository;
 
     @Autowired
