@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RoleService;
-import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.services.RoleServiceImp;
+import ru.kata.spring.boot_security.demo.services.UserServiceImp;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private final UserServiceImp userService;
+    private final RoleServiceImp roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserServiceImp userService, RoleServiceImp roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -35,7 +35,7 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public String editUserForm(@PathVariable Long id, Model model) {
         User user = userService.findById(id);
-        List<Role> roles = roleService.findAllRole();
+        List<Role> roles = roleService.findAll();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         return "admin/user-form-update";
@@ -51,7 +51,7 @@ public class AdminController {
     // Создание нового пользователя
     @GetMapping("/create")
     public String createUserForm(Model model) {
-        List<Role> roles = roleService.findAllRole();
+        List<Role> roles = roleService.findAll();
         model.addAttribute("user", new User());
         model.addAttribute("roles", roles);
         return "admin/user-form";

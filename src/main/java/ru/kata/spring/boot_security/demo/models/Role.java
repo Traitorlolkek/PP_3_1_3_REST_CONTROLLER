@@ -29,14 +29,6 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public void addUserToRole(User user) {
-        this.users.add(user);
-    }
-
-    public void removeUserToRole(User user) {
-        this.users.remove(user);
-    }
-
     public Long getId() {
         return id;
     }
@@ -51,10 +43,6 @@ public class Role implements GrantedAuthority {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
     }
 
     @Override
