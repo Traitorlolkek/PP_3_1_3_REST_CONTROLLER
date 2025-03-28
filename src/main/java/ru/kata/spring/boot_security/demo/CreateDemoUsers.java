@@ -31,7 +31,7 @@ public class CreateDemoUsers implements CommandLineRunner {
         Set<Role> roleUser = new HashSet<>();
         roleAdmin.add(new Role("ROLE_ADMIN"));
         roleUser.add(new Role("ROLE_USER"));
-        User admin = new User("admin","adm Sec-name", (byte) 20,
+        User admin = new User("admin", "adm Sec-name", (byte) 20,
                 passwordEncoder.encode("admin"),
                 "admin@mail.com");
         User user = new User("user", "user Sec-name", (byte) 20,
