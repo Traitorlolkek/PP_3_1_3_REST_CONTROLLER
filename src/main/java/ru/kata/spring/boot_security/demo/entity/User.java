@@ -20,27 +20,20 @@ public class User implements UserDetails {
     private String username;
     @Column(name = "last_name")
     private String lastName;
-
     private byte age;
     @Column(unique = true)
     private String email;
-
     private String password;
-    @Transient
-    private String passwordConfirm;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public User() {
-    }
+    @Transient
+    private User user;
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public User() {
     }
 
     public User(String username,
@@ -49,7 +42,6 @@ public class User implements UserDetails {
                 String password,
                 String email) {
         this.username = username;
-        this.passwordConfirm = passwordConfirm;
         this.password = password;
         this.email = email;
         this.age = age;
@@ -118,14 +110,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
     @Override
     public String getPassword() {
         return password;
@@ -133,7 +117,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (Collection<? extends GrantedAuthority>) getRoles();
+        return getRoles();
     }
 
     @Override

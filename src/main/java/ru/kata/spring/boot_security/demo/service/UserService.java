@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -19,9 +20,11 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    boolean createUser(@ModelAttribute User user);
+    User getUserById(Long id);
 
-    User getEditUserPage(@PathVariable Long id);
+    User oneUser(Principal principal);
+
+    boolean createUser(User user);
 
     boolean editUser(@ModelAttribute("user") User user);
 

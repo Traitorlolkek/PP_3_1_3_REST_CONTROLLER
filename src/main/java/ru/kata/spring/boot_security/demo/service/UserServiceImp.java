@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import java.security.Principal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,19 +29,26 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImp implements UserDetailsService, UserService {
 
+    private final RoleRepository roleRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public UserServiceImp(UserRepository userRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     public User findByUsername(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User oneUser(Principal principal) {
+        return (User) ((Authentication) principal).getPrincipal();
     }
 
     @Override
@@ -47,8 +58,19 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
-    public boolean createUser(@ModelAttribute User user) {
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+
+    @Override
+    public boolean createUser(User user) {
         if (userRepository.findByUsername(user.getEmail()) == null) {
+            Set<Role> roles = new HashSet<>();
+            for (Role role : user.getRoles()) {
+                roles.add(roleRepository.getOne(role.getId()));
+            }
+            user.setRoles(roles);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return true;
@@ -58,28 +80,22 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
-    public User getEditUserPage(@PathVariable Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return user;
-    }
-
-    @Override
-    @Transactional
-    public boolean editUser(@ModelAttribute("user") User user) {
-        return userRepository.findById(user.getId())
-                .map(editUser -> {
-                    editUser.setEmail(user.getEmail());
-                    editUser.setUsername(user.getUsername());
-                    editUser.setLastName(user.getLastName());
-                    editUser.setAge(user.getAge());
-                    if (user.getPassword() != null) {
-                        editUser.setPassword(passwordEncoder.encode(user.getPassword()));
-                    }
-                    editUser.setRoles(user.getRoles());
-                    userRepository.save(editUser);
-                    return true;
-                })
-                .orElse(false);
+    public boolean editUser(User user) {
+        if (userRepository.findByUsername(user.getEmail()) == null) {
+            User editUser = userRepository.findById(user.getId()).orElse(null);
+            editUser.setUsername(user.getUsername());
+            editUser.setLastName(user.getLastName());
+            editUser.setAge(user.getAge());
+            editUser.setEmail(user.getEmail());
+            editUser.setRoles(user.getRoles());
+            if (user.getPassword() != null) {
+                editUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            userRepository.save(editUser);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -94,13 +110,12 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findByUsername(email);
         if (user == null) {
             throw new UsernameNotFoundException(email);
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user.getRoles()));
+        return user;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
